@@ -49,3 +49,7 @@ div#loginForm {
 	position: relative;
 	top: 40%;
 }
+
+.sshkey-help {
+	word-wrap: break-word;
+}

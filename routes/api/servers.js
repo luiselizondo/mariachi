@@ -2,6 +2,7 @@ var Connection = require("../../lib/database");
 var db = new Connection();
 var User = require("../../lib/user");
 var user = new User();
+var config = require("../../config");
 
 /**
  * Get all servers
@@ -92,8 +93,22 @@ function deleteServer(req, res) {
 }
 
 function getSSHKey(req, res) {
-	var publicKey = require("fs").readFileSync("/Users/luis/.ssh/id_rsa.pub");
-	res.send(200, publicKey);
+	var id = req.params.id;
+
+	db.getServer(id, function(err, server) {
+		require("fs").readFile(config.ssh.publicKey, "utf-8", function(err, publicKey) {
+			if(err) {
+				res.send(406, err);
+			}
+
+			if(publicKey) {
+				res.send(200, {
+					publicKey: publicKey,
+					server: server
+				});
+			}
+		});
+	});
 }
 
 module.exports = function(app) {
@@ -102,5 +117,5 @@ module.exports = function(app) {
 	app.post("/api/servers", user.auth, postServer);
 	app.put("/api/servers/:id", user.auth, putServer);
 	app.delete("/api/servers/:id", user.auth, deleteServer);
-	app.get("/api/ssh/key", user.auth, getSSHKey);
+	app.get("/api/ssh/key/:id", user.auth, getSSHKey);
 }

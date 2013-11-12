@@ -40,10 +40,12 @@ Mariachi.Views.ServersView = Backbone.View.extend({
 	events: {
 		"click button.sshHelp": "sshHelp",
 	},
+	serverId: null,
 	template: _.template($(".viewServer").html()),
 	loading: new Mariachi.Views.Loading(),
 	initialize: function(data) {
 		this.render(data.id);
+		this.serverId = data.id;
 	},
 	render: function(id) {
 		var self = this;
@@ -62,7 +64,7 @@ Mariachi.Views.ServersView = Backbone.View.extend({
 	sshHelp: function(e) {
 		e.preventDefault();
 
-		var content = new sshHelp();
+		var content = new Mariachi.Views.SSHHelp({id: this.serverId});
 
 		var modal = new Backbone.BootstrapModal({
 			content: content,
@@ -76,19 +78,32 @@ Mariachi.Views.ServersView = Backbone.View.extend({
 	}
 });
 
-var sshHelp = Backbone.View.extend({
+Mariachi.Views.SSHHelp = Backbone.View.extend({
 	tagName: "p",
-	getKey: function(callback) {
-		$.get("/api/ssh/key", function(response) {
-			callback(response);
-		});
+	className: "sshkey-help",
+	serverID: null,
+	initialize: function(data) {
+		this.serverID = data.id;
 	},
 	render: function() {
 		var self = this;
 		$(this.template).removeClass("hidden");
-		this.getKey(function(response) {
-			self.$el.html('ssh "' + response + '" umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys');
-		})
+		
+		var model = new Mariachi.Models.SSHKey({id: this.serverID});
+		model.fetch({
+			success: function(model, response) {
+				console.log(response);
+				if(response) {
+					var html = 'echo "' + response.publicKey + '" | ssh -p ' + response.server.ssh_port + ' ' + response.server.ssh_user + '@' + response.server.address + ' "umask 077; test -d .ssh || mkdir .ssh ; cat >> ~/.ssh/authorized_keys" ; echo "Key copied" || exit 1';
+					// self.$el.html('ssh "' + response.publicKey + '" umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys');
+					self.$el.html(html);
+				}
+			},
+			error: function(model, error) {
+				console.log(error.responseText);
+			},
+		});
+
 		return this;
 	}
 });

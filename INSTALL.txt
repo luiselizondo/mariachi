@@ -10,3 +10,11 @@
 8. Go to http://yourip:port/ to run the installer
 9. Once the installer is finished,do Control+C to kill the application and you're set, run the app again with
 node app.js or forever
+
+10. If you want to run recepies on your destination server and you'll need sudo, you need to go to the remote server and do:
+
+"sudo visudo"
+
+and then add your user like this:
+
+myuser ALL=(ALL) NOPASSWD: ALL
