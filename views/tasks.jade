@@ -1,0 +1,133 @@
+extends layout
+
+block content
+	script(type="text/template", class="pattern")
+		div.form-group
+			label <%= pattern.pattern %>
+			<input type="text" name="<%= pattern.pattern %>" id="<%= pattern.pattern %>" class="form-control pattern-input" />
+	script(type="text/template", class="addTask")
+		div.row
+			div(class="col-lg-6")
+				h3 Add task
+				form(role="form").well
+					div.form-group
+						label Task type:
+							select(name="type", id="type").form-control
+								option() Select
+								option(value="recepie") Run recepie 
+								option(value="template") Deploy template
+					div.form-group.recepiesSelectContainer.hidden
+						label Recepie
+						select(name="recepies", id="recepies").form-control
+							option() Select
+						span.help-block Select a recepie
+					div.form-group.templatesSelectContainer.hidden
+						label Template
+						select(name="templates", id="templates").form-control
+							option() Select
+						span.help-block Select a template
+					div.form-group.serversSelectContainer.hidden
+						label Server
+						select(name="servers", id="servers").form-control
+							option() Select
+						span.help-block Select a recepie
+					div.form-group.templatesPatternsContainer.hidden
+						label Replacement patterns
+						div.patterns
+							div
+					button(type="submit", class="btn btn-primary submit hidden", id="submit") Save
+	script(type="text/template", class="viewTask")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 Task id: <%= id %>
+					div.pull-right
+						<button type="submit" id="execute" data-task="<%= id %>" class="btn btn-success">Execute</button>
+				div
+					div.form-group
+						label Type:  
+						p <%= type %>
+					div.form-group
+						label Recepie / Template:  
+						p <%= recepieName ? recepieName : templateName %>
+					div.form-group
+						label Server:  
+						p <%= name %>
+					div.form-group
+						label User:
+						p <%= userName %>
+					div.form-group
+						label Status:
+						p.status <%= status %>
+					div.form-group
+						label Result:
+						div.well.stdout  
+							<% if(stdout) { %>
+							<%= stdout.replace(new RegExp('\r?\n', 'g'), '<br />') %>
+							<% } %>
+					<% if(stderr) { %>
+					div.form-group
+						label Errors:
+						div.well.stderr
+							<%= stderr.replace(new RegExp('\r?\n', 'g'), '<br />') %>
+					<% } %>
+	script(type="text/template", class="deleteTask")
+		div 
+			p 
+				strong Are you sure you cancel to delete the task <%= name %>?
+		button(type="submit", id="submit").btn.btn-danger Confirm
+		a(href="/tasks").btn.btn-primary Cancel
+	script(type="text/template", class="listTasks")
+		table.table.table-hover.table-striped
+			thead
+				th Task Id
+				th Type
+				th Recepie / Template
+				th Server
+				th User
+				th Status
+				th 
+			tbody
+				<% _.each(items, function(item) { %>
+				tr.item
+					td <%= item.id %>
+					td
+						<%= item.type %>
+					td 
+						<%= item.recepieName ? item.recepieName : item.templateName %>
+					td 
+						<a href="/servers#server/<%= item.server %>"><%= item.serverName %></a>
+					td <%= item.userName %>
+					td.status <%= item.status %>
+					td 
+						<a href="#tasks/<%= item.id %>" class="btn btn-primary">View</a>
+						<button type="submit" id="execute" data-task="<%= item.id %>" class="btn btn-success">Execute</button>
+						<a href="#tasks/delete/<%= item.id %>" class="btn btn-danger">Cancel</a>
+				<% }) %>
+	div#page
+		div.container
+			div.row
+				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+					h1= title
+						div.pull-right
+							a(href="#tasks/add").btn.btn-primary Add task
+					hr
+					div#messages
+					div#content
+block scripts
+	script(type="text/javascript", src="javascripts/app/models/Models.js");
+	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
+	script(type="text/javascript", src="javascripts/app/views/TasksView.js");
+	script(type="text/javascript", src="javascripts/app/routers/TasksRouter.js")
+	script(type="text/javascript")
+		function main() {
+			new Mariachi.Routers.TasksRouter();
+			// instantiate the Sockets view
+			// new Mariachi.Views.Sockets();
+
+			Backbone.history.start();	
+		}
+
+		// Initialize main
+		$(function(){
+			main();
+		});

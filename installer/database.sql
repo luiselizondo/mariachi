@@ -1,0 +1,115 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+CREATE  TABLE IF NOT EXISTS `servers` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(255) NOT NULL ,
+  `ssh_user` VARCHAR(255) NOT NULL ,
+  `ssh_port` INT(10) UNSIGNED NOT NULL DEFAULT '22' ,
+  `group` VARCHAR(255) NULL DEFAULT NULL ,
+  `tags` VARCHAR(255) NULL DEFAULT NULL ,
+  `os` VARCHAR(45) NOT NULL ,
+  `address` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `os` (`os` ASC) ,
+  INDEX `address` (`address` ASC) ,
+  INDEX `name` (`name` ASC) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE  TABLE IF NOT EXISTS `users` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `email` VARCHAR(255) NOT NULL ,
+  `password` VARCHAR(45) NOT NULL ,
+  `created` DATETIME NULL DEFAULT NULL ,
+  `name` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
+  INDEX `name` (`name` ASC) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE  TABLE IF NOT EXISTS `tasks` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `status` VARCHAR(45) NOT NULL DEFAULT 'WAITING' ,
+  `task` INT(10) UNSIGNED NOT NULL ,
+  `server` INT(10) UNSIGNED NOT NULL ,
+  `user` INT(10) UNSIGNED NOT NULL DEFAULT 1 ,
+  `stdout` LONGTEXT NULL DEFAULT NULL ,
+  `stderr` LONGTEXT NULL DEFAULT NULL ,
+  `created` DATETIME NULL DEFAULT NULL ,
+  `started` DATETIME NULL DEFAULT NULL ,
+  `ended` DATETIME NULL DEFAULT NULL ,
+  `type` VARCHAR(45) NULL DEFAULT NULL ,
+  `data` TEXT NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE  TABLE IF NOT EXISTS `Sessions` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `sid` VARCHAR(255) NULL DEFAULT NULL ,
+  `expires` DATETIME NULL DEFAULT NULL ,
+  `session_data` TEXT BINARY NULL DEFAULT NULL ,
+  `ip` VARCHAR(255) NOT NULL DEFAULT 'localhost' ,
+  `expireAfterSeconds` INT(11) NULL DEFAULT NULL ,
+  `logedIn` INT(11) NOT NULL DEFAULT '0' ,
+  `user` VARCHAR(255) NOT NULL DEFAULT 'guest' ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `sid` (`sid` ASC) ,
+  INDEX `expires` (`expires` ASC) ,
+  INDEX `expireAfterSeconds` (`expireAfterSeconds` ASC) ,
+  INDEX `logedIn` (`logedIn` ASC) ,
+  INDEX `user` (`user` ASC) )
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE  TABLE IF NOT EXISTS `recepies` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `recepie` LONGTEXT NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `name` (`name` ASC) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE  TABLE IF NOT EXISTS `sites` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NOT NULL ,
+  `fqdn` VARCHAR(45) NULL DEFAULT NULL ,
+  `data` LONGTEXT NULL DEFAULT NULL ,
+  `status` INT(11) NULL DEFAULT 0 ,
+  PRIMARY KEY (`id`) ,
+  INDEX `name` (`name` ASC) ,
+  INDEX `fqdn` (`fqdn` ASC) ,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE  TABLE IF NOT EXISTS `templates` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NOT NULL ,
+  `description` TEXT NULL DEFAULT NULL ,
+  `destination` VARCHAR(255) NOT NULL ,
+  `patterns` TEXT NULL DEFAULT NULL ,
+  `template` LONGTEXT NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `name` (`name` ASC) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+

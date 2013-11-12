@@ -1,0 +1,15 @@
+doctype 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/vendor/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div.loading
+        img(src="images/loading.gif").loadingImage
+        div.loadingText Loading...
+    include navbar
+    include messages
+    block content
+    include footer
+    block scripts

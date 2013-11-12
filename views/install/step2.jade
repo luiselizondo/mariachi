@@ -1,0 +1,26 @@
+extends ../layout-anonymous
+
+block content
+	div.container#installer
+		div.row
+			div.col-lg-8.col-lg-offset-2
+				h1= title
+				hr
+				form(role="form", method="post")
+					h3 Create the first user
+					div.well
+						div.form-group
+							label(for="name") Full name
+							input(type="text", name="name", id="name", class="form-control")
+							div.help-block Enter the full name
+
+						div.form-group
+							label(for="email") Email
+							input(type="text", name="email", id="email", class="form-control")
+							div.help-block Enter the user email
+
+						div.form-group
+							label(for="password") Password
+							input(type="password", name="password", id="password", class="form-control")
+					hr
+					button(type="submit", class="btn btn-success") Finish

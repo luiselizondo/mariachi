@@ -1,0 +1,146 @@
+extends layout
+
+block content
+	script(type="text/template", class="addServerTemplate")
+		div.row
+			div(class="col-lg-6")
+				h3 Add server
+				form(role="form").well
+					div.form-group
+						label Name
+						input(type="text", name="name", class="form-control", id="name")
+						span.help-block Name of the server
+					div.form-group
+						label IP address
+						input(type="text", name="address", class="form-control", id="address")
+						span.help-block IP address or FQDM of the server
+					div.form-group
+						label SSH User
+						input(type="text", user="ssh_user", class="form-control", id="ssh_user")
+						span.help-block User to use when connecting to the server
+					div.form-group
+						label SSH Port
+						input(type="text", user="ssh_port", class="form-control", id="ssh_port", placeholder="22")
+						span.help-block SSH Port to use
+					div.form-group
+						label Group
+						input(type="text", user="group", class="form-control", id="group")
+					div.form-group
+						label Tags
+						input(type="text", user="tags", class="form-control", id="tags")
+					div.form-group
+						label Operating System
+						select(name="os", id="os").form-control
+							option(value="Ubuntu 12.04") Ubuntu 12.04 
+							option(value="Centos 5") Centos 5
+					button(type="submit", class="btn btn-primary", id="submitAddServer") Save
+	script(type="text/template", class="editServerTemplate")
+		div.row
+			div(class="col-lg-6")
+				h3 Add server
+				form(role="form").well
+					div.form-group
+						label Name
+						<input type="text" name="name" class="form-control" id="name" value="<%= name %>" />
+						span.help-block Name of the server
+					div.form-group
+						label IP address
+						<input type="text" name="address" class="form-control" id="address" value="<%= address %>" />
+						span.help-block IP address or FQDM of the server
+					div.form-group
+						label SSH User
+						<input type="text" name="ssh_user" class="form-control" id="ssh_user" value="<%= ssh_user %>" />
+						span.help-block User to use when connecting to the server
+					div.form-group
+						label SSH Port
+						<input type="text" name="ssh_port" class="form-control" id="ssh_port" value="<%= ssh_port %>" />
+						span.help-block SSH Port to use
+					div.form-group
+						label Group
+						<input type="text" name="group" class="form-control" id="group" value="<%= group %>" />
+					div.form-group
+						label Tags
+						<input type="text" name="tags" class="form-control" id="tags" value="<%= tags %>" />
+					div.form-group
+						label Operating System
+						select(name="os", id="os").form-control
+							option(value="Ubuntu 12.04") Ubuntu 12.04 
+							option(value="Centos 5") Centos 5
+					button(type="submit", class="btn btn-primary", id="submitAddServer") Update
+	script(type="text/template", class="viewServer")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				div.hidden.sshCommand This is the command
+				h3 <%= name %>
+					button().sshHelp.pull-right.btn.btn-warning Help
+				hr
+				div.well
+					div.form-group
+						label Name:
+						p <%= name %>
+					div.form-group
+						label Address:  
+						p <%= address %>
+					div.form-group
+						label SSH User:  
+						p <%= ssh_user %>
+					div.form-group
+						label SSH Port:  
+						p <%= ssh_port %>
+					div.form-group
+						label Operating System:  
+						p <%= os %>
+	script(type="text/template", class="removeServer")
+		div 
+			p 
+				strong Are you sure you want to delete the server <%= name %>?
+		button(type="submit", id="confirmDeleteSubmit").btn.btn-danger Confirm delete
+		a(href="/servers").btn.btn-primary Cancel
+	script(type="text/template", class="serverList")
+		div.well.well-sm 
+			span Control your servers here
+		table.table.table-hover.table-striped
+			thead
+				th Name
+				th Address
+				th SSH User
+				th SSH Port
+				th Operating System
+				th 
+			tbody
+				<% _.each(items, function(item) { %>
+				tr.item
+					td <%= item.name %>
+					td <%= item.address %>
+					td <%= item.ssh_user %>
+					td <%= item.ssh_port %>
+					td <%= item.os %>
+					td 
+						<a href="#server/<%= item.id %>" class="btn btn-primary">View</a>
+						<a href="#server/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
+						<a href="#server/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
+				<% }) %>
+	div#page
+		div.container
+			div.row
+				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+					h1= title
+						div.pull-right
+							a(href="#server/add").btn.btn-primary Add server
+					hr
+					div#messages
+					div#content
+block scripts
+	script(type="text/javascript", src="javascripts/app/models/Models.js");
+	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
+	script(type="text/javascript", src="javascripts/app/views/ServersView.js");
+	script(type="text/javascript", src="javascripts/app/routers/ServersRouter.js")
+	script(type="text/javascript")
+		function main() {
+			new Mariachi.Routers.ServersRouter();
+			Backbone.history.start();	
+		}
+
+		$(function(){
+			main();
+		});

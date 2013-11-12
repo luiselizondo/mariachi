@@ -1,0 +1,115 @@
+extends layout
+
+block content
+	script(type="text/template", class="addTemplate")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 Add template
+				form(role="form").well
+					div.form-group
+						label Name
+						input(type="text", name="name", class="form-control", id="name")
+						span.help-block Name of the template
+					div.form-group
+						label Description
+						textarea(name="description", class="form-control", id="description", rows="3")
+						span.help-block Enter a brief description of the template
+					div.form-group
+						label Destination
+						input(type="text", name="destination", class="form-control", id="destination")
+						span.help-block Full path and filename
+					div.form-group
+						label Patterns
+						input(type="text", name="patterns", class="form-control", id="patterns")
+						span.help-block Replacement patterns. Eg. name, some_variable, memory_limit, destination
+					div.form-group
+						label Template
+						textarea(name="template", class="form-control", id="template", rows="15")
+						span.help-block Full template file using patterns, only the patterns in Patterns will be replaced
+					button(type="submit", class="btn btn-primary", id="submit") Save
+	script(type="text/template", class="editTemplate")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 Add server
+				form(role="form").well
+					div.form-group
+						label Name
+						<input type="text" name="name" class="form-control" id="name" value="<%= name %>" />
+						span.help-block Name of the template
+					div.form-group
+						label Description
+						textarea(name="description", class="form-control", id="description", rows="3") <%= description %>
+						span.help-block Enter a brief description of the template
+					div.form-group
+						label Template
+						textarea(name="template", class="form-control", id="template", rows="15") <%= template %>
+						span.help-block Enter a bash script template
+					button(type="submit", class="btn btn-primary", id="submit") Update
+	script(type="text/template", class="viewTemplate")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 <%= name %>
+				div
+					div.form-group
+						label Name:
+						p <%= name %>
+					div.form-group
+						label Destination:  
+						p <%= destination %>
+					div.form-group
+						label Description:  
+						p <%= description %>
+					div.form-group
+						label Replacement patterns:  
+						p <%= patterns %>
+					div.form-group
+						label Template:  
+						div
+							code <%= template.replace(new RegExp('\r?\n', 'g'), '<br />') %>
+	script(type="text/template", class="deleteTemplate")
+		div 
+			p 
+				strong Are you sure you want to delete the template <%= name %>?
+		button(type="submit", id="submit").btn.btn-danger Confirm delete
+		a(href="/templates").btn.btn-primary Cancel
+	script(type="text/template", class="listTemplates")
+		div.well.well-sm 
+			span Control your templates here
+		table.table.table-hover.table-striped
+			thead
+				th.col-lg-8.col-md-8.col-sm-8 Name
+				th 
+			tbody
+				<% _.each(items, function(item) { %>
+				tr.item
+					td <%= item.name %>
+					td 
+						<a href="#templates/<%= item.id %>" class="btn btn-primary">View</a>
+						<a href="#templates/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
+						<a href="#templates/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
+				<% }) %>
+	div#page
+		div.container
+			div.row
+				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+					h1= title
+						div.pull-right
+							a(href="#templates/add").btn.btn-primary Add template
+					hr
+					div#messages
+					div#content
+block scripts
+	script(type="text/javascript", src="javascripts/app/models/Models.js");
+	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
+	script(type="text/javascript", src="javascripts/app/views/TemplatesView.js");
+	script(type="text/javascript", src="javascripts/app/routers/TemplatesRouter.js")
+	script(type="text/javascript")
+		function main() {
+			new Mariachi.Routers.TemplatesRouter();
+			Backbone.history.start();	
+		}
+
+		// Initialize main
+		$(function(){
+			main();
+		});

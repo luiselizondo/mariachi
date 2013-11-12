@@ -1,0 +1,23 @@
+extends layout-anonymous
+
+block content
+	div#loginPage
+		div#serversContainer
+			div#loginForm.container
+				div.row
+					div.col-xs-10.col-sm-6.col-md-4.col-lg-4.col-sm-offset-6.col-md-offset-8.col-lg-offset-8
+						form(id="loginForm", method="post", action="/login", role="form").well
+							h4 Login
+							hr
+							div.messages
+							if message
+								div.alert.alert-dismissable
+									p= message
+							div.form-group
+								label(for="email") Email address
+								input(type="email", class="username form-control", name="username", id="username", placeholder="Enter email")
+							div.form-group
+								label(for="password") Password
+								input(type="password", class="password form-control", id="password", name="password", placeholder="Password")
+								p
+								button(type="submit", class="btn btn-primary loginButton") Log in

@@ -1,0 +1,13 @@
+extends ../layout-anonymous
+
+block content
+	div.container#installer
+		div.row
+			div.col-lg-8.col-lg-offset-2
+				h1= title
+				hr
+				div.alert-success.alert
+					p The installer has finished, you can now enjoy Mariachi.
+					p You may need to restart your app by running 'node app.js' again
+					hr
+					a(href="/").btn.btn-success Login

@@ -1,0 +1,56 @@
+extends ../layout-anonymous
+
+block content
+	div.container#installer
+		div.row
+			div.col-lg-8.col-lg-offset-2
+				h1= title
+				hr
+				form(role="form", method="post", action="/install")
+					h3 MySQL Settings
+					div.well
+						div.form-group
+							label(for="mysqldatabase") Database name
+							input(type="text", name="mysqldatabase", id="mysqldatabase", class="form-control")
+							div.help-block Enter the database name, it must exist before you submit this form.
+
+						div.form-group
+							label(for="mysqluser") User
+							input(type="text", name="mysqluser", id="mysqluser", class="form-control")
+							div.help-block Enter the database username
+
+						div.form-group
+							label(for="mysqlpassword") Password
+							input(type="password", name="mysqlpassword", id="mysqlpassword", class="form-control")
+
+						div.form-group
+							label(for="mysqlport") Port
+							input(type="text", name="mysqlport", id="mysqlport", class="form-control", value="3306")
+							div.help-block If you need to change the port to the database, you can do it here
+
+						div.form-group
+							label(for="mysqlhostname") Hostname
+							input(type="text", name="mysqlhostname", id="mysqlhostname", class="form-control", value="localhost")
+							div.help-block Enter the FQDN or IP address of the database
+
+					h3 SSH Settings
+					div.well
+						div.form-group
+							label(for="sshPublicKey") Public Key Path
+							input(type="text", name="sshPublicKey", id="sshPublicKey", class="form-control")
+							div.help-block Enter the full path to your public ssh key file. Eg. /home/me/.ssh/id_rsa.pub
+
+						div.form-group
+							label(for="sshPrivateKey") Private Key Path
+							input(type="text", name="sshPrivateKey", id="sshPrivateKey", class="form-control")
+							div.help-block Enter the full path to your private ssh key file. Eg. /home/me/.ssh/id_rsa
+
+					h3 SSH Settings
+					div.well
+						div.form-group
+							label(for="secretKey") Secret key
+							input(type="password", name="secretKey", id="secretKey", class="form-control")
+							div.help-block Enter a secret key used to encrypt your data, it can be anything, the bigger the better
+
+					hr
+					button(type="submit", class="btn btn-success") Install

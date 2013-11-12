@@ -1,0 +1,51 @@
+body {
+	padding-top: 50px;
+}
+
+body.anonymous {
+	padding-top: 0;
+}
+
+#installer {
+	padding-bottom: 3em;
+}
+
+.navbar-brand {
+    color: #FFFFFF !important;
+}
+
+div.loading {
+	position: absolute;
+	width: 50px;
+	height: auto;
+	margin: 0 auto;
+	top: 40%;
+	vertical-align: middle;
+	left: 50%;
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+div.loading .loadingText {
+	margin-left: -15%;
+}
+
+#serversContainer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url("/images/servers.jpg");
+  background-repeat: no-repeat;
+}
+
+div#loginPage {
+
+}
+
+div#loginForm {
+	position: relative;
+	top: 40%;
+}
