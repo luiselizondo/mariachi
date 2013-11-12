@@ -57,18 +57,20 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 	executeTask: function(e) {
 		var self = this;
 		self.loading.show();
+
+		// clean the divs
+		
 		
 		e.preventDefault();
 		var taskId = $(e.currentTarget).attr("data-task");
 
-		// Clean the well
-		$(".well").empty();
+		
 		
 		var model = new Mariachi.Models.Task({id: taskId});
 		model.set({status: "EXECUTING"});
 		model.save({
 			success: function(model, response) {
-				
+				console.log("Model saved");
 			},
 			error: function(model, response) {
 				console.log(response);
@@ -78,15 +80,37 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 		var statusCell = $("p.status");
 		statusCell.text("EXECUTING");
 
-		Mariachi.io.on("tasks:stream", function(data) {
-			if(data.stderr) {
+		Mariachi.io.on("tasks:start", function(data) {
+			$(".stdout").html(" ");
+			$(".stderr").html(" ");
+
+			// Clean the well
+			$(".well").html(" ");
+
+			statusCell.text(data.status);
+
+			if(!_.isNull(data.stderr)) {
 				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
-				$(".stderr").append(stderr);
+				$(".stderr").html(stderr);
 			}
 
-			if(data.stdout) {
+			if(!_.isNull(data.stdout)) {
 				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
-				$(".stdout").append(stdout);
+				$(".stdout").html(stdout);
+			}
+		});
+
+		Mariachi.io.on("tasks:stream", function(data) {
+			statusCell.text(data.status);
+
+			if(!_.isNull(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").html(stderr);
+			}
+
+			if(!_.isNull(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").html(stdout);
 			}
 		});
 
