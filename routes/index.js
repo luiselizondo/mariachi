@@ -54,7 +54,7 @@ function isUser(req, res, next) {
     next();
   }
   else {
-    res.redirect("/servers");
+    res.redirect("/tasks");
   }
 }
 
@@ -62,7 +62,7 @@ module.exports = function(app) {
   app.get('/', isUser, login);
   app.get("/login", login);
   app.post("/login", passport.authenticate('local', { 
-    successRedirect: "/servers", 
+    successRedirect: "/tasks", 
     failureRedirect: "/login",
     failureFlash: true 
   }));
