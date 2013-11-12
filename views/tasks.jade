@@ -100,7 +100,6 @@ block content
 					td.status <%= item.status %>
 					td 
 						<a href="#tasks/<%= item.id %>" class="btn btn-primary">View</a>
-						<button type="submit" id="execute" data-task="<%= item.id %>" class="btn btn-success">Execute</button>
 						<a href="#tasks/delete/<%= item.id %>" class="btn btn-danger">Cancel</a>
 				<% }) %>
 	div#page
@@ -118,7 +117,7 @@ block scripts
 	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
 	script(type="text/javascript", src="javascripts/app/views/TasksView.js");
 	script(type="text/javascript", src="javascripts/app/routers/TasksRouter.js")
-	script(type="text/javascript")
+	script(type="text/javascript").
 		function main() {
 			new Mariachi.Routers.TasksRouter();
 			// instantiate the Sockets view

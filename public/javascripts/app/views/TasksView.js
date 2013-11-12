@@ -8,48 +8,22 @@ Mariachi.Views.ListTasks = Backbone.View.extend({
 		var self = this;
 		this.render();
 	},
-	events: {
-		"click #execute": "executeTask"
-	},
-	collection: new Mariachi.Collections.Tasks(),
 	template: _.template($(".listTasks").html()),
 	render: function() {
 		var self = this;
-		var items = this.collection;
+		var items = new Mariachi.Collections.Tasks();
 		items.fetch({
+			success: function(collection, response) {
+				// Table
+				self.$el.html(self.template({items: response}));
+				self.loading.hide();
+			},
 			error: function(collection, response) {
 				console.log("error");
 				console.log(response.responseText);
 				self.loading.hide();
 			},
-			success: function(collection, response) {
-				// Table
-				self.$el.html(self.template({items: response}));
-				self.loading.hide();
-			}
 		});
-	},
-	executeTask: function(e) {
-		e.preventDefault();
-		var taskId = $(e.currentTarget).attr("data-task");
-		
-		var model = new Mariachi.Models.Task({id: taskId});
-		model.set({status: "EXECUTING"});
-		model.save({
-			success: function(model, response) {
-				console.log("Hello");
-				console.log(model);
-				console.log(response);
-			},
-			error: function(model, response) {
-				console.log(response);
-			}
-		});
-
-		var task = this.collection.get({id: taskId});
-		// console.log(task.toJSON());
-		var statusCell = $(e.currentTarget).parent("tr");
-		console.log(statusCell);
 	}
 });
 
@@ -63,7 +37,6 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 	},
 	loading: new Mariachi.Views.Loading(),
 	template: _.template($(".viewTask").html()),
-	collection: new Mariachi.Collections.Tasks(),
 	initialize: function(data) {
 		this.render(data.id);
 	},
