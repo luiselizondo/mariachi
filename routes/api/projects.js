@@ -5,10 +5,10 @@ var User = require("../../lib/user");
 var user = new User();
 
 /**
- * Get all Sites
+ * Get all Projects
  */
-function getSites(req, res) {
-	db.getSites(function(err, results) {
+function getProjects(req, res) {
+	db.getProjects(function(err, results) {
 		if(err) {
 			console.log(err);
 			res.send(401, err);
@@ -21,11 +21,11 @@ function getSites(req, res) {
 }
 
 /**
- * Get one Site
+ * Get one Project
  */
-function getSite(req, res) {
+function getProject(req, res) {
 	var id = req.params.id;
-	db.getSite(id, function(err, result) {
+	db.getProject(id, function(err, result) {
 		if(err) {
 			console.log(err);
 			res.send(500, err);
@@ -38,9 +38,9 @@ function getSite(req, res) {
 }
 
 /**
- * Create a Site
+ * Create a Project
  */
-function postSite(req, res) {
+function postProject(req, res) {
 	var data = req.body;
 
 	// name an fqdn are separate fields
@@ -55,7 +55,7 @@ function postSite(req, res) {
 	insert.data = JSON.stringify(data);
 	
 	console.log(insert);
-	db.saveSite(insert, function(err, result) {
+	db.saveProject(insert, function(err, result) {
 		if(err) {
 			console.log(err);
 			res.send(500, err);
@@ -68,13 +68,13 @@ function postSite(req, res) {
 }
 
 /**
- * Update a Site
+ * Update a Project
  */
-function putSite(req, res) {
+function putProject(req, res) {
 	var id = req.params.id;
 	var data = req.body;
 	
-	db.updateSite(id, data, function(err, result) {
+	db.updateProject(id, data, function(err, result) {
 		if(err) {
 			console.log(err);
 			res.send(500, err);
@@ -87,12 +87,12 @@ function putSite(req, res) {
 }
 
 /**
- * Delete a Site
+ * Delete a Project
  */
-function deleteSite(req, res) {
+function deleteProject(req, res) {
 	var id = req.params.id;
 
-	db.deleteSite(id, function(err, result) {
+	db.deleteProject(id, function(err, result) {
 		if(err) {
 			console.log(err);
 			res.send(500, err);
@@ -105,9 +105,9 @@ function deleteSite(req, res) {
 }
 
 module.exports = function(app) {
-	app.get("/api/sites", user.auth, getSites);
-	app.get("/api/sites/:id", user.auth, getSite);
-	app.post("/api/sites", user.auth, postSite);
-	app.put("/api/sites/:id", user.auth, putSite);
-	app.delete("/api/sites/:id", user.auth, deleteSite);
+	app.get("/api/projects", user.auth, getProjects);
+	app.get("/api/projects/:id", user.auth, getProject);
+	app.post("/api/projects", user.auth, postProject);
+	app.put("/api/projects/:id", user.auth, putProject);
+	app.delete("/api/projects/:id", user.auth, deleteProject);
 }

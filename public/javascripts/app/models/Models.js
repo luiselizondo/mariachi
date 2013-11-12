@@ -21,13 +21,13 @@ Mariachi.Models.Server = Backbone.Model.extend({
 /**
  * @todo add created
  */
-Mariachi.Models.Site = Backbone.Model.extend({
+Mariachi.Models.Project = Backbone.Model.extend({
 	defaults: {
 		name: "",
 		fqdn: "",
 		data: {}
 	},
-	urlRoot: "/api/sites"
+	urlRoot: "/api/projects"
 });
 
 /**

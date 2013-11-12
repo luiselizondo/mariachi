@@ -1,17 +1,28 @@
 extends layout
 
 block content
-	script(type="text/template", class="addSite")
+	script(type="text/template", class="addProject")
 		div.row
 			div(class="col-lg-12")
-				h3 Add Site
+				h3 Add Project
 				form(role="form").form-horizontal.well.row
 					div.col-lg-6
+						div.form-group
+							label.control-label.col-sm-3 Type
+							div.col-sm-9
+								select(name="type", id="name", class="form-control")
+									option() - Select -
+									option(value="nodejs") Node.js
+									option(value="joomla") Joomla
+									option(value="wordpress") Wordpress
+									option(value="drupal6") Drupal 6
+									option(value="drupal7") Drupal 7
+								span.help-block Type of the project
 						div.form-group
 							label.control-label.col-sm-3 Name
 							div.col-sm-9
 								input(type="text", name="name", class="form-control", id="name")
-								span.help-block Name of the Site
+								span.help-block Name of the Project
 						div.form-group
 							label.control-label.col-sm-3 FQDN
 							div.col-sm-9
@@ -108,7 +119,7 @@ block content
 
 					div.row
 						button(type="submit", class="btn btn-primary", id="submit") Save
-	script(type="text/template", class="editSite")
+	script(type="text/template", class="editProject")
 		div.row
 			div(class="col-lg-6")
 				h3 Add server
@@ -126,7 +137,7 @@ block content
 						<input type="password" name="password" class="form-control" id="password />
 						span.help-block Password
 					button(type="submit", class="btn btn-primary", id="submit") Update
-	script(type="text/template", class="viewSite")
+	script(type="text/template", class="viewProject")
 		div.row
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
 				h3 <%= name %>
@@ -140,15 +151,15 @@ block content
 					div.form-group
 						label Created:  
 						p <%= created %>
-	script(type="text/template", class="deleteSite")
+	script(type="text/template", class="deleteProject")
 		div 
 			p 
-				strong Are you sure you want to delete the Site <%= name %>?
+				strong Are you sure you want to delete the Project <%= name %>?
 		button(type="submit", id="submit").btn.btn-danger Confirm delete
-		a(href="/Sites").btn.btn-primary Cancel
-	script(type="text/template", class="listSites")
+		a(href="/Projects").btn.btn-primary Cancel
+	script(type="text/template", class="listProjects")
 		div.well.well-sm 
-			span Control your Sites here
+			span Control your Projects here
 		table.table.table-hover.table-striped
 			thead
 				th Name
@@ -160,9 +171,9 @@ block content
 					td <%= item.name %>
 					td <%= item.fqdn %>
 					td 
-						<a href="#sites/<%= item.id %>" class="btn btn-primary">View</a>
-						<a href="#sites/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
-						<a href="#sites/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
+						<a href="#projects/<%= item.id %>" class="btn btn-primary">View</a>
+						<a href="#projects/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
+						<a href="#projects/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
 				<% }) %>
 	div#page
 		div.container
@@ -170,18 +181,18 @@ block content
 				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
 					h1= title
 						div.pull-right
-							a(href="#sites/add").btn.btn-primary Add Site
+							a(href="#projects/add").btn.btn-primary Add Project
 					hr
 					div#messages
 					div#content
 block scripts
 	script(type="text/javascript", src="javascripts/app/models/Models.js");
 	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
-	script(type="text/javascript", src="javascripts/app/views/SitesView.js");
-	script(type="text/javascript", src="javascripts/app/routers/SitesRouter.js")
+	script(type="text/javascript", src="javascripts/app/views/ProjectsView.js");
+	script(type="text/javascript", src="javascripts/app/routers/ProjectsRouter.js")
 	script(type="text/javascript")
 		function main() {
-			new Mariachi.Routers.SitesRouter();
+			new Mariachi.Routers.ProjectsRouter();
 			Backbone.history.start();	
 		}
 

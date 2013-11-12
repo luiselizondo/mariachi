@@ -8,9 +8,9 @@ Mariachi.Collections.Servers = Backbone.Collection.extend({
 	url: "/api/servers"
 });
 
-Mariachi.Collections.Sites = Backbone.Collection.extend({
-	model: Mariachi.Models.Site,
-	url: "/api/sites"
+Mariachi.Collections.Projects = Backbone.Collection.extend({
+	model: Mariachi.Models.Project,
+	url: "/api/projects"
 });
 
 Mariachi.Collections.Tasks = Backbone.Collection.extend({

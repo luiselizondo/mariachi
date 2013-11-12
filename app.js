@@ -86,7 +86,7 @@ require("./routes/api/servers")(app);
 require("./routes/api/users")(app);
 require("./routes/api/recepies")(app);
 require("./routes/api/tasks")(app);
-require("./routes/api/sites")(app);
+require("./routes/api/projects")(app);
 require("./routes/api/templates")(app);
 
 require("./lib/socket")(io);
