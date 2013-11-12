@@ -1,0 +1,12 @@
+1. Go to /installer and copy default.settings.json to settings.json
+2. Make sure you apply the correct permissions so the installer can write to settings.json
+3. Create a database
+	mysqladmin -uuser -p create mydatabase
+4. Create a database and import it:
+	mysql -uuser -p mydatabase < installer/database.sql
+5. Run "npm install" to install dependencies
+6. If you haven't done so, create a new SSH Key for your server and remember the location of both your private and your public keys
+7. Run "node app.js" from the root directory
+8. Go to http://yourip:port/ to run the installer
+9. Once the installer is finished,do Control+C to kill the application and you're set, run the app again with
+node app.js or forever
