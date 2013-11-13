@@ -1,8 +1,14 @@
-var Connection = require("../../lib/database");
-var db = new Connection();
-var SSH = require("../../lib/ssh");
-var User = require("../../lib/user");
-var user = new User();
+var Connection = require("../../lib/database")
+	, SSH = require("../../lib/ssh")
+	, events = require('../../lib/events').events
+	, User = require("../../lib/user")
+	, Project = require("../../lib/projects")
+	, db = new Connection()
+	, user = new User();
+	
+events.on("projects:deploy", function(data) {
+	new Project(data);
+});
 
 /**
  * Get all Projects
@@ -32,6 +38,7 @@ function getProject(req, res) {
 		}
 
 		if(result) {
+			events.emit("projects:deploy", result);
 			res.send(200, result);
 		}
 	});
@@ -47,11 +54,13 @@ function postProject(req, res) {
 	var insert = {
 		name: data.name,
 		fqdn: data.fqdn,
+		type: data.type,
 		status: 0
 	}
 
 	delete data.name;
 	delete data.fqdn;
+	delete data.type;
 	insert.data = JSON.stringify(data);
 	
 	console.log(insert);
@@ -81,6 +90,10 @@ function putProject(req, res) {
 		}
 
 		if(result) {
+
+			if(data.status === "DEPLOY") {
+				events.emit("projects:deploy", data);
+			}
 			res.send(201, result);
 		}
 	})

@@ -24,6 +24,7 @@ Mariachi.Models.Server = Backbone.Model.extend({
 Mariachi.Models.Project = Backbone.Model.extend({
 	defaults: {
 		name: "",
+		type: "",
 		fqdn: "",
 		data: {}
 	},
