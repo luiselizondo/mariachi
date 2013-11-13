@@ -50,8 +50,7 @@ block content
 						p <%= description %>
 					div.form-group
 						label Recepie:  
-						div
-							code <%= recepie %>
+						div.well.code <%= recepie.replace(new RegExp('\r?\n', 'g'), '<br />') %>
 	script(type="text/template", class="deleteRecepie")
 		div 
 			p 
