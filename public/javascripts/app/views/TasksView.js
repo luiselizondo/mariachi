@@ -67,7 +67,8 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 		
 		
 		var model = new Mariachi.Models.Task({id: taskId});
-		model.set({status: "EXECUTING"});
+		// change the status and the task will be executed
+		model.set({status: "EXECUTE"});
 		model.save({
 			success: function(model, response) {
 				console.log("Model saved");

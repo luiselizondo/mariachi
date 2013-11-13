@@ -1,138 +1,37 @@
-var events = require('../../lib/events').events;
-var Connection = require("../../lib/database");
-var db = new Connection();
-var SSH = require("../../lib/ssh");
-var User = require("../../lib/user");
-var user = new User();
-var _ = require("underscore");
-var fs = require("fs");
+var _ = require("underscore")
+	, fs = require("fs")
+  , Connection = require("../../lib/database")
+	, events = require('../../lib/events').events
+ 	, SSH = require("../../lib/ssh")
+	, User = require("../../lib/user")
+	, Tasks = require("../../lib/tasks")
+	, user = new User()
+	, db = new Connection()
+	, tasks = new Tasks();
 
 // require events, this is an instantiated class
-var mustache = require("mustache");
-
-events.on("tasks:execute", function(id) {
-		console.log("Called event: task:execute");
-
-		function executeRecepie(task, callback) {
-			var options = {
-				sshUser: task.ssh_user,
-				address: task.address,
-				sshPort: task.ssh_port,
-				command: task.recepie.recepie,
-			}
-			var ssh = new SSH(options);
-			ssh.exec(function(err, stdout, stderr) {
-				var data = {
-					stdout: stdout,
-					stderr: stderr,
-					status: "SUCCESS"
-				}
-				
-				if(err) {
-					data.stderr = err
-					data.status = "ERROR";
-				}
-
-				events.emit("tasks:finished", {
-					stderr: stderr, 
-					stdout: "", 
-					status: data.status
-				});
-				
-				db.updateTask(id, data, function(err, result) {
-					
-				});
-			})
-		}
-
-		function writeTempFile(data, callback) {
-			var date = new Date();
-			var filename = "/tmp/mariachiTemplateFile-" + date;
-			fs.writeFile(filename, data, function(err) {
-				if(err) {
-					callback(err, null);
-				}
-				else {
-					callback(null, filename);
-				}
+events.on("tasks:execute", function(id) {	
+	db.getTask(id, function(err, task) {
+		if(err) {
+			// if we can't get the task, emit the tasks:finished 
+			// event with an error
+			events.emit("tasks:finished", {
+				stderr: err,
+				stdout: null,
+				status: "ERROR"
 			});
 		}
 
-		function executeTemplate(task, callback) {
-			var source = task.template.template;
-
-			// convert each pattern into an object
-			// that will work as the pattern replacement values
-			var params = {}
-			_.each(task.data, function(item, index) {
-				params[item.id] = item.value;
-			});	
-
-			var template = mustache.compile(source);
-			var compiledTemplate = template(params);
-
-			var options = {
-				sshUser: task.ssh_user,
-				address: task.address,
-				sshPort: task.ssh_port,
+		if(task) {
+			if(task.type == "recepie") {
+				tasks.executeRecepie(task);
 			}
-
-			var ssh = new SSH(options);
-			
-			// We can't send a string as a file, so we need to save a temp file
-			// first
-			var remoteFile = "/tmp/testFile.conf";
-
-			writeTempFile(compiledTemplate, function(err, localFile) {
-				ssh.scp(localFile, remoteFile, function(stderr, stdout) {
-					var data = {
-						stdout: stdout,
-						stderr: stderr,
-					}
-					
-					if(stderr) {
-						data.status = "ERROR";
-						events.emit("tasks:finished", {
-							stderr: stderr, 
-							stdout: stdout, 
-							status: "ERROR"
-						});
-					}
-
-					if(stdout) {
-						data.status = "SUCCESS";
-						events.emit("tasks:finished", {
-							stderr: stderr, 
-							stdout: stdout, 
-							status: "SUCCESS"
-						});	
-					}
-
-					db.updateTask(id, data, function(err, result) {
-						
-					});
-				});
-			});
-		}		
-		
-		db.getTask(id, function(err, task) {
-			if(err) {
-				events.emit("tasks:finished", {
-					stderr: err,
-					stdout: null,
-					status: "ERROR"
-				});
+			if(task.type == "template") {
+				tasks.executeTemplate(task);
 			}
-			if(task) {
-				if(task.type == "recepie") {
-					executeRecepie(task);
-				}
-				if(task.type == "template") {
-					executeTemplate(task);
-				}
-			}
-		});
+		}
 	});
+});
 
 /**
  * Get all Tasks
@@ -173,7 +72,6 @@ function getTask(req, res) {
  */
 function postTask(req, res) {
 	var data = req.body;
-	console.log(data);
 	
 	// data.created = new Date();
 	// @todo change for a real value
@@ -188,7 +86,7 @@ function postTask(req, res) {
 		if(result) {
 			res.send(201, result);
 		}
-	})
+	});
 }
 
 /**
@@ -198,29 +96,21 @@ function putTask(req, res) {
 	var id = req.params.id;
 	var status = req.body.status;
 
-	// Listen event
+	db.changeTaskStatus(id, status, function(err, result) {
+		if(err) {
+			console.log(err);
+			res.send(500, err);
+		}
 
-	
-
-	// events.removeAllListeners("tasks:execute");
-	
-	var possibleStatus = ["WAITING", "EXECUTING", "SUCCESS", "ERROR", "CANCELED"];
-
-	if(status == "EXECUTING") {
-		db.changeTaskStatus(id, status, function(err, result) {
-			if(err) {
-				console.log(err);
-				res.send(500, err);
-			}
-
-			if(result) {
-				// Fire event
+		if(result) {
+			// If the status is "EXECUTE" then execute the task
+			if(status === "EXECUTE") {
 				events.emit("tasks:execute", id);
-				
-				res.send(201, result);
 			}
-		});
-	}
+
+			res.send(201, result);
+		}
+	});
 }
 
 /**
