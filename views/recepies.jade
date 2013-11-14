@@ -1,14 +1,47 @@
 extends layout
 
 block content
+	//- Parameters
 	script(type="text/template", class="parameter")
 		div.form-group
 			label <%= parameter.parameter %>
 			<input type="text" name="<%= parameter.parameter %>" id="<%= parameter.parameter %>" class="form-control parameter-input" />
+
+	//- View Recepie
+	script(type="text/template", class="viewRecepie")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 <%= name %>
+					div.btn-group.pull-right
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#recepies/deploy/<%= id %>">Deploy</a>
+							li
+								<a href="#recepies/history/<%= id %>">Deploy history</a>
+							li
+								<a href="#recepies/edit/<%= id %>">Edit</a>
+							li
+								<a href="#recepies/delete/<%= id %>">Delete</a>
+				hr
+				div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+					div.row
+						p <%= description %>
+						br
+						<% if(parameters) { %>
+						h4 Parameters
+						div.well.code <%= parameters %>
+						<% } %>
+						h4 Recepie
+						div.well.code <%= recepie.replace(new RegExp('\r?\n', 'g'), '<br />') %>
+
+	//- Add recepie
 	script(type="text/template", class="addRecepie")
 		div.row
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
 				h3 Add recepie
+				hr
 				form(role="form").well
 					div.form-group
 						label Name
@@ -19,14 +52,33 @@ block content
 						textarea(name="description", class="form-control", id="description", rows="3")
 						span.help-block Enter a brief description of the recepie
 					div.form-group
+						label Parameters
+						input(type="text", name="parameters", class="form-control", id="parameters")
+						span.help-block Enter parameters separated by commas, the parameters you define here can be used in your recepie.
+					div.form-group
 						label Recepie
 						textarea(name="recepie", class="form-control", id="recepie", rows="15")
 						span.help-block Enter a bash script recepie
 					button(type="submit", class="btn btn-primary", id="submit") Save
+
+	//- edit recepie
 	script(type="text/template", class="editRecepie")
 		div.row
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-				h3 Add server
+				h3 Edit recepie
+					div.btn-group.pull-right
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#recepies/<%= id %>">View</a>
+							li
+								<a href="#recepies/deploy/<%= id %>">Deploy</a>
+							li
+								<a href="#recepies/history/<%= id %>">Deploy history</a>
+							li
+								<a href="#recepies/delete/<%= id %>">Delete</a>
+				hr
 				form(role="form").well
 					div.form-group
 						label Name
@@ -37,70 +89,79 @@ block content
 						textarea(name="description", class="form-control", id="description", rows="3") <%= description %>
 						span.help-block Enter a brief description of the recepie
 					div.form-group
+						label Parameters
+						<input type="text" name="parameters" class="form-control" id="parameters" value="<%= parameters %>" />
+						span.help-block Enter parameters separated by commas, the parameters you define here can be used in your recepie.
+					div.form-group
 						label Recepie
 						textarea(name="recepie", class="form-control", id="recepie", rows="15") <%= recepie %>
 						span.help-block Enter a bash script recepie
 					button(type="submit", class="btn btn-primary", id="submit") Update
-	script(type="text/template", class="viewRecepie")
-		div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-			h3 <%= name %>
-				div.btn-group.pull-right
-					a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
-						span.caret
-					ul(role="menu").dropdown-menu
-						li
-							<a href="#recepies/deploy/<%= id %>">Deploy</a>
-						li
-							<a href="#recepies/history/<%= id %>">Deploy history</a>
-						li
-							<a href="#recepies/edit/<%= id %>">Edit</a>
-						li
-							<a href="#recepies/delete/<%= id %>">Delete</a>
-			hr
-			div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
-				div.row
-					p <%= description %>
-					br
-					h4 Recepie
-					div.well.code <%= recepie.replace(new RegExp('\r?\n', 'g'), '<br />') %>
 
+	//- deploy recepie
 	script(type="text/template", class="deployRecepie")
-		div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-			h3 Deploy: <%= name %>
-				div.btn-group.pull-right
-					a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
-						span.caret
-					ul(role="menu").dropdown-menu
-						li
-							<a href="#recepies/<%= id %>">View</a>
-						li
-							<a href="#recepies/history/<%= id %>">Deploy history</a>
-						li
-							<a href="#recepies/edit/<%= id %>">Edit</a>
-						li
-							<a href="#recepies/delete/<%= id %>">Delete</a>
-			hr
-			div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 Deploy: <%= name %>
+					div.btn-group.pull-right
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#recepies/<%= id %>">View</a>
+							li
+								<a href="#recepies/history/<%= id %>">Deploy history</a>
+							li
+								<a href="#recepies/edit/<%= id %>">Edit</a>
+							li
+								<a href="#recepies/delete/<%= id %>">Delete</a>
+				hr
 				div.row
-					p <%= description %>
-					br
-					form(role="form")
-						div.form-group
-							label(for="servers") Server
-							select(id="servers", name="servers", class="form-control")
-						div.form-group.templatesParametersContainer
-							label Parameters
-							div.parameters.well
-								div
-						button(type="button", id="execute").btn.btn-success Execute
+					div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+						p <%= description %>
+						form(role="form")
+							br
+							div.form-group
+								label(for="servers") Server
+								select(id="servers", name="servers", class="form-control")
+									option() - Select -
+							div.form-group.templatesParametersContainer
+								label Parameters
+								div.parameters.well
+									div
+							button(type="button", id="execute").btn.btn-success Execute
+							br
+				div(class="col-lg-3 col-md-3 col-sm-3")
+		div.row.results.hidden
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h4 Results
+					div.pull-right
+						small
+							span#deployStatus
+				hr
+				div
+					span(class="label label-info") stdout
+				br
+				div.well.stdout
+				div
+					span(class="label label-danger") stderr
+				br
+				div.well.stderr  
 
-
+	//- delete recepie
 	script(type="text/template", class="deleteRecepie")
-		div 
-			p 
-				strong Are you sure you want to delete the recepie <%= name %>?
-		button(type="submit", id="submit").btn.btn-danger Confirm delete
-		a(href="/recepies").btn.btn-primary Cancel
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 Delete recepie: <%= name %>
+				hr
+				div.well
+					h4 Are you sure you want to delete the recepie <%= name %>?
+					br
+					div.btn-group
+						button(type="submit", id="submit").btn.btn-danger Confirm delete
+						<a href="recepies#recepies/<%= id %>" class="btn btn-primary">Cancel</a>
+
+	//- list recepies
 	script(type="text/template", class="listRecepies")
 		div(class="col-lg-9 col-md-9 col-sm-12 col-xs-12")
 			table.table.table-hover.table-striped
@@ -117,19 +178,20 @@ block content
 						td 
 							<a href="#recepies/<%= item.id %>" class="btn btn-default">View</a>
 					<% }) %>
+
 	div#page
 		div#header
 			div.container
 				div.col-lg-12.col-md-12.col-sm-12.col-xs-12
-					h1= title
-						div.pull-right
-							a(href="#recepies/add").btn.btn-primary Add recepie
-					br
+					div.row
+						h1= title
+							div.pull-right
+								a(href="#recepies/add").btn.btn-primary Add recepie
+						br
 				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
 					div.row
 						div#messages
 						div#content
-
 
 block scripts
 	script(type="text/javascript", src="javascripts/app/models/Models.js");

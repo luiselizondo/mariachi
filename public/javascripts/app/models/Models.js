@@ -2,6 +2,7 @@ Mariachi.Models.Recepie = Backbone.Model.extend({
 	defaults: {
 		name: "",
 		description: "",
+		parameters: "",
 		recepie: "",
 	},
 	urlRoot: "/api/recepies"

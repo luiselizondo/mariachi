@@ -76,6 +76,7 @@ function postTask(req, res) {
 	// data.created = new Date();
 	// @todo change for a real value
 	data.user = 1;
+	// data.started = new Date();
 
 	db.saveTask(data, function(err, result) {
 		if(err) {
@@ -84,6 +85,8 @@ function postTask(req, res) {
 		}
 
 		if(result) {
+			// result.insertId is the id of the task created
+			events.emit("tasks:execute", result.insertId);
 			res.send(201, result);
 		}
 	});
@@ -92,49 +95,48 @@ function postTask(req, res) {
 /**
  * Update a Task
  */
-function putTask(req, res) {
-	var id = req.params.id;
-	var status = req.body.status;
+// function putTask(req, res) {
+// 	var id = req.params.id;
+// 	var status = req.body.status;
 
-	db.changeTaskStatus(id, status, function(err, result) {
-		if(err) {
-			console.log(err);
-			res.send(500, err);
-		}
+// 	db.changeTaskStatus(id, status, function(err, result) {
+// 		if(err) {
+// 			console.log(err);
+// 			res.send(500, err);
+// 		}
 
-		if(result) {
-			// If the status is "EXECUTE" then execute the task
-			if(status === "EXECUTE") {
-				events.emit("tasks:execute", id);
-			}
+// 		if(result) {
+// 			// If the status is "EXECUTE" then execute the task
+// 			if(status === "EXECUTE") {
+// 				events.emit("tasks:execute", id);
+// 			}
 
-			res.send(201, result);
-		}
-	});
-}
+// 			res.send(201, result);
+// 		}
+// 	});
+// }
 
 /**
  * Delete a Task
  */
-function deleteTask(req, res) {
-	var id = req.params.id;
+// function deleteTask(req, res) {
+// 	var id = req.params.id;
 
-	db.changeTaskStatus(id, "CANCELED", function(err, result) {
-		if(err) {
-			console.log(err);
-			res.send(500, err);
-		}
+// 	db.changeTaskStatus(id, "CANCELED", function(err, result) {
+// 		if(err) {
+// 			console.log(err);
+// 			res.send(500, err);
+// 		}
 
-		if(result) {
-			res.send(200, result);
-		}
-	});
-}
+// 		if(result) {
+// 			res.send(200, result);
+// 		}
+// 	});
+// }
 
 module.exports = function(app) {
 	app.get("/api/tasks", user.auth, getTasks);
 	app.get("/api/tasks/:id", user.auth, getTask);
 	app.post("/api/tasks", user.auth, postTask);
-	app.put("/api/tasks/:id", user.auth, putTask);
-	app.delete("/api/tasks/:id", user.auth, deleteTask);
+	// app.delete("/api/tasks/:id", user.auth, deleteTask);
 }
