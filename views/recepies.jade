@@ -1,6 +1,10 @@
 extends layout
 
 block content
+	script(type="text/template", class="parameter")
+		div.form-group
+			label <%= parameter.parameter %>
+			<input type="text" name="<%= parameter.parameter %>" id="<%= parameter.parameter %>" class="form-control parameter-input" />
 	script(type="text/template", class="addRecepie")
 		div.row
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
@@ -80,7 +84,15 @@ block content
 				div.row
 					p <%= description %>
 					br
-					
+					form(role="form")
+						div.form-group
+							label(for="servers") Server
+							select(id="servers", name="servers", class="form-control")
+						div.form-group.templatesParametersContainer
+							label Parameters
+							div.parameters.well
+								div
+						button(type="button", id="execute").btn.btn-success Execute
 
 
 	script(type="text/template", class="deleteRecepie")

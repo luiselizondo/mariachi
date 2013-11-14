@@ -226,13 +226,15 @@ Mariachi.Views.DeleteRecepie = Backbone.View.extend({
 	}
 });
 
-
 /**
  * View a server
  */
 Mariachi.Views.DeployRecepie = Backbone.View.extend({
 	el: "#content",
 	loading: new Mariachi.Views.Loading(),
+	events: {
+		"click #execute": "execute"
+	},
 	template: _.template($(".deployRecepie").html()),
 	initialize: function(data) {
 		this.render(data.id);
@@ -244,11 +246,49 @@ Mariachi.Views.DeployRecepie = Backbone.View.extend({
 			success: function(model, response) {
 				self.$el.html(self.template(model.toJSON()));
 				self.loading.hide();
+
+				self.populateServers();
+				self.addParamsForm(response);
 			},
 			error: function(model, response) {
 				console.log(response);
 				self.loading.hide();
 			}
-		});	
+		});
+	},
+	populateServers: function() {
+		var self = this;
+		self.loading.show();
+
+		var servers = new Mariachi.Collections.Servers();
+		servers.fetch({
+			success: function(model, response) {
+				var options = $("#servers");
+				_.each(response, function(item) {
+				    options.append(new Option(item.name, item.id));
+				});
+				self.loading.hide();
+			},
+			error: function(model, response) {
+				console.log(response);
+				self.loading.hide();
+			}
+		});
+	},
+	addParamsForm: function(response) {
+		// convert patterns to array
+		var params = response.params.split(", ");
+
+		// for each pattern, create a new view, this view will create
+		// a new input element
+		_.each(params, function(param, index) {
+			new Mariachi.Views.Parameters({param: param});
+		});
+	},
+	execute: function(e) {
+		e.preventDefault();
+		var self = this;
+
+		
 	}
 });
