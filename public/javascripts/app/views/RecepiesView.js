@@ -225,3 +225,30 @@ Mariachi.Views.DeleteRecepie = Backbone.View.extend({
 
 	}
 });
+
+
+/**
+ * View a server
+ */
+Mariachi.Views.DeployRecepie = Backbone.View.extend({
+	el: "#content",
+	loading: new Mariachi.Views.Loading(),
+	template: _.template($(".deployRecepie").html()),
+	initialize: function(data) {
+		this.render(data.id);
+	},
+	render: function(id) {
+		var self = this;
+		var model = new Mariachi.Models.Recepie({id: id});
+		model.fetch({
+			success: function(model, response) {
+				self.$el.html(self.template(model.toJSON()));
+				self.loading.hide();
+			},
+			error: function(model, response) {
+				console.log(response);
+				self.loading.hide();
+			}
+		});	
+	}
+});
