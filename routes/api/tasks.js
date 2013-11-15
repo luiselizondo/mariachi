@@ -44,7 +44,7 @@ events.on("tasks:execute", function(id) {
 				tasks.executeRecepie(task);
 			}
 			if(task.type == "template") {
-				tasks.executeTemplate(task);
+				tasks.deployTemplate(task);
 			}
 		}
 	});
@@ -90,12 +90,15 @@ function getTask(req, res) {
 function postTask(req, res) {
 	var data = req.body;
 	
-	// data.created = new Date();
-	// @todo change for a real value
-	data.user = 1;
+	data.user = user.current(req, res);
+
 	var now = new Date();
+	
 	// DATETIME FORMAT IS 'YYYY-MM-DD HH:MM:SS'
 	data.started = dateFormat(now, "yyyy-mm-dd hh:mm:ss");
+
+	console.log("About to save");
+	console.log(data);
 
 	db.saveTask(data, function(err, result) {
 		if(err) {
@@ -110,48 +113,6 @@ function postTask(req, res) {
 		}
 	});
 }
-
-/**
- * Update a Task
- */
-// function putTask(req, res) {
-// 	var id = req.params.id;
-// 	var status = req.body.status;
-
-// 	db.changeTaskStatus(id, status, function(err, result) {
-// 		if(err) {
-// 			console.log(err);
-// 			res.send(500, err);
-// 		}
-
-// 		if(result) {
-// 			// If the status is "EXECUTE" then execute the task
-// 			if(status === "EXECUTE") {
-// 				events.emit("tasks:execute", id);
-// 			}
-
-// 			res.send(201, result);
-// 		}
-// 	});
-// }
-
-/**
- * Delete a Task
- */
-// function deleteTask(req, res) {
-// 	var id = req.params.id;
-
-// 	db.changeTaskStatus(id, "CANCELED", function(err, result) {
-// 		if(err) {
-// 			console.log(err);
-// 			res.send(500, err);
-// 		}
-
-// 		if(result) {
-// 			res.send(200, result);
-// 		}
-// 	});
-// }
 
 module.exports = function(app) {
 	app.get("/api/tasks", user.auth, getTasks);

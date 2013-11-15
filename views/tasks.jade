@@ -5,37 +5,6 @@ block content
 		div.form-group
 			label <%= pattern.pattern %>
 			<input type="text" name="<%= pattern.pattern %>" id="<%= pattern.pattern %>" class="form-control pattern-input" />
-	script(type="text/template", class="addTask")
-		div.row
-			div(class="col-lg-6")
-				h3 Add task
-				form(role="form").well
-					div.form-group
-						label Task type:
-							select(name="type", id="type").form-control
-								option() Select
-								option(value="recepie") Run recepie 
-								option(value="template") Deploy template
-					div.form-group.recepiesSelectContainer.hidden
-						label Recepie
-						select(name="recepies", id="recepies").form-control
-							option() Select
-						span.help-block Select a recepie
-					div.form-group.templatesSelectContainer.hidden
-						label Template
-						select(name="templates", id="templates").form-control
-							option() Select
-						span.help-block Select a template
-					div.form-group.serversSelectContainer.hidden
-						label Server
-						select(name="servers", id="servers").form-control
-							option() Select
-						span.help-block Select a recepie
-					div.form-group.templatesPatternsContainer.hidden
-						label Replacement patterns
-						div.patterns
-							div
-					button(type="submit", class="btn btn-primary submit hidden", id="submit") Save
 	script(type="text/template", class="viewTask")
 		div.row
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
@@ -59,7 +28,7 @@ block content
 						label Status:
 						p.status <%= status %>
 					div.form-group
-						label Result:
+						h4 Result:
 						div.well.stdout  
 							<% if(stdout) { %>
 							<%= stdout.replace(new RegExp('\r?\n', 'g'), '<br />') %>

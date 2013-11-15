@@ -62,9 +62,9 @@ Mariachi.Models.Template = Backbone.Model.extend({
 	defaults: {
 		name: "",
 		description: "",
-		patterns: "",
-		template: "",
 		destination: "",
+		parameters: "",
+		template: "",
 	},
 	urlRoot: "/api/templates"
 });

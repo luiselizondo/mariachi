@@ -111,7 +111,7 @@ Mariachi.Views.AddRecepie = Backbone.View.extend({
 });
 
 /**
- * Edit server
+ * Edit recepie
  */
 Mariachi.Views.EditRecepie = Backbone.View.extend({
 	el: "#content",
@@ -175,7 +175,7 @@ Mariachi.Views.EditRecepie = Backbone.View.extend({
 });
 
 /**
- * Delete server
+ * Delete recepie
  */
 Mariachi.Views.DeleteRecepie = Backbone.View.extend({
 	el: "#content",
@@ -229,16 +229,16 @@ Mariachi.Views.DeleteRecepie = Backbone.View.extend({
 });
 
 /**
- * View a server
+ * Execute recepie
  */
-Mariachi.Views.DeployRecepie = Backbone.View.extend({
+Mariachi.Views.ExecuteRecepie = Backbone.View.extend({
 	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	events: {
 		"click #execute": "execute"
 	},
 	recepieId: null,
-	template: _.template($(".deployRecepie").html()),
+	template: _.template($(".executeRecepie").html()),
 	initialize: function(data) {
 		this.render(data.id);
 		this.recepieId = data.id;
@@ -335,9 +335,6 @@ Mariachi.Views.DeployRecepie = Backbone.View.extend({
 			success: function(model, response) {
 				var collection = new Mariachi.Collections.Tasks();
 				collection.add(model);
-				console.log(response);
-				// Backbone.history.navigate("/tasks");
-				// 
 			},
 			error: function(model, error) {
 				console.log(error);
@@ -385,12 +382,12 @@ Mariachi.Views.DeployRecepie = Backbone.View.extend({
 		});
 
 		Mariachi.io.on("tasks:stream", function(data) {
-			if(!_.isNull(data.stderr)) {
+			if(!_.isNull(data.stderr) && !_.isUndefined(data.stderr)) {
 				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
 				$(".stderr").html(stderr);
 			}
 
-			if(!_.isNull(data.stdout)) {
+			if(!_.isNull(data.stdout) && !_.isUndefined(data.stdout)) {
 				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
 				$(".stdout").html(stdout);
 			}
