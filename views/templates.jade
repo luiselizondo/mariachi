@@ -63,7 +63,7 @@ block content
 					div.form-group
 						label Template
 						textarea(name="template", class="form-control", id="template", rows="15")
-						span.help-block Full template file using patterns, only the patterns in Patterns will be replaced
+						span.help-block Full template file using parameters, only the parameters in the parameters input field will be replaced. Parameters can be defined as {{}}, if you need to escape special characters use {{{}}}
 					button(type="submit", class="btn btn-primary", id="submit") Save
 
 	//- Edit template
@@ -147,13 +147,13 @@ block content
 		div.row.results.hidden
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
 				h4 Results
-					div
-						small
-							span#started
-						small 
-							span#ended
-					div.pull-right
-						small
+					div.row
+					div(class="col-lg-10 col-md-10 col-sm-10 col-xs-10")
+						span#started
+						span
+						span#ended
+					div(class="col-lg-2 col-md-2 col-sm-2 col-xs-2")
+						div.pull-right
 							span#deployStatus
 				hr
 				div
