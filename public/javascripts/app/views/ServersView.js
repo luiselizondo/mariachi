@@ -1,7 +1,7 @@
 /**
  * List servers
  */
-Mariachi.Views.ServersHomeView = Backbone.View.extend({
+Mariachi.Views.ListServers = Backbone.View.extend({
 	el: "#content",
 	events: {
 		"click .btn": "getServer"
@@ -11,7 +11,7 @@ Mariachi.Views.ServersHomeView = Backbone.View.extend({
 		this.render();
 	},
 	loading: new Mariachi.Views.Loading(),
-	template: _.template($(".serverList").html()),
+	template: _.template($(".listServers").html()),
 	render: function() {
 		var self = this;
 		var items = new Mariachi.Collections.Servers();
@@ -35,7 +35,7 @@ Mariachi.Views.ServersHomeView = Backbone.View.extend({
 /**
  * View a server
  */
-Mariachi.Views.ServersView = Backbone.View.extend({
+Mariachi.Views.ViewServer = Backbone.View.extend({
 	el: "#content",
 	events: {
 		"click button.sshHelp": "sshHelp",
@@ -92,10 +92,8 @@ Mariachi.Views.SSHHelp = Backbone.View.extend({
 		var model = new Mariachi.Models.SSHKey({id: this.serverID});
 		model.fetch({
 			success: function(model, response) {
-				console.log(response);
 				if(response) {
 					var html = 'echo "' + response.publicKey + '" | ssh -p ' + response.server.ssh_port + ' ' + response.server.ssh_user + '@' + response.server.address + ' "umask 077; test -d .ssh || mkdir .ssh ; cat >> ~/.ssh/authorized_keys" ; echo "Key copied" || exit 1';
-					// self.$el.html('ssh "' + response.publicKey + '" umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys');
 					self.$el.html(html);
 				}
 			},
@@ -111,26 +109,26 @@ Mariachi.Views.SSHHelp = Backbone.View.extend({
 /**
  * Add server
  */
-Mariachi.Views.ServersAddView = Backbone.View.extend({
+Mariachi.Views.AddServer = Backbone.View.extend({
 	el: "#content",
 	events: {
-		"click #submitAddServer": "submitAddServer"
+		"click #submit": "submit"
 	},
 	loading: new Mariachi.Views.Loading(),
 	initialize: function() {
 		this.render();
 	},
 	render: function() {
-		var template = _.template($(".addServerTemplate").html());
+		var template = _.template($(".addServer").html());
 		this.$el.html(template);
 		this.loading.hide();
 	},
-	submitAddServer: function(e) {
+	submit: function(e) {
 		var self = this;
 		e.preventDefault();
 		self.loading.show();
 
-		$("#submitAddServer").addClass("disabled");
+		$("#submit").addClass("disabled");
 
 		var data = {
 			name: $('input#name').val(),
@@ -176,10 +174,10 @@ Mariachi.Views.ServersAddView = Backbone.View.extend({
 /**
  * Edit server
  */
-Mariachi.Views.ServersEditView = Backbone.View.extend({
+Mariachi.Views.EditServer = Backbone.View.extend({
 	el: "#content",
 	events: {
-		"click #submitAddServer": "submitAddServer"
+		"click #submit": "submit"
 	},
 	loading: new Mariachi.Views.Loading(),
 	initialize: function(data) {
@@ -190,7 +188,7 @@ Mariachi.Views.ServersEditView = Backbone.View.extend({
 		var self = this;
 		this.model.fetch({
 			success: function(model, response) {
-				var template = _.template($(".editServerTemplate").html());
+				var template = _.template($(".editServer").html());
 				self.$el.html(template(model.toJSON()));
 				self.loading.hide();
 			},
@@ -199,12 +197,12 @@ Mariachi.Views.ServersEditView = Backbone.View.extend({
 			}
 		});
 	},
-	submitAddServer: function(e) {
+	submit: function(e) {
 		var self = this;
 		e.preventDefault();
 		self.loading.show();
 
-		$("#submitAddServer").addClass("disabled");
+		$("#submit").addClass("disabled");
 
 		var data = {
 			name: $('input#name').val(),
@@ -250,10 +248,10 @@ Mariachi.Views.ServersEditView = Backbone.View.extend({
 /**
  * Delete server
  */
-Mariachi.Views.ServersDeleteView = Backbone.View.extend({
+Mariachi.Views.DeleteServer = Backbone.View.extend({
 	el: "#content",
 	events: {
-		"click #confirmDeleteSubmit": "deleteServer"
+		"click #submit": "submit"
 	},
 	loading: new Mariachi.Views.Loading(),
 	initialize: function(data) {
@@ -264,7 +262,7 @@ Mariachi.Views.ServersDeleteView = Backbone.View.extend({
 		var self = this;
 		this.model.fetch({
 			success: function(model, response) {
-				var template = _.template($(".removeServer").html());
+				var template = _.template($(".deleteServer").html());
 				self.$el.html(template(model.toJSON()));
 				self.loading.hide();
 			},
@@ -273,7 +271,7 @@ Mariachi.Views.ServersDeleteView = Backbone.View.extend({
 			}
 		});
 	},
-	deleteServer: function(e) {
+	submit: function(e) {
 		e.preventDefault();
 		var self = this;
 		self.loading.shows();

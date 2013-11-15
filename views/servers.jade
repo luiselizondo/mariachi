@@ -1,10 +1,35 @@
 extends layout
 
 block content
-	script(type="text/template", class="addServerTemplate")
+	script(type="text/template", class="viewServer")
 		div.row
-			div(class="col-lg-6")
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				div.hidden.sshCommand This is the command
+				h3 <%= name %>
+					div.btn-group.pull-right
+						button().sshHelp.btn.btn-warning Help
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#servers/edit/<%= id %>">Edit</a>
+							li
+								<a href="#servers/delete/<%= id %>">Delete</a>
+				hr
+				div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+					div.row
+						div.form-group
+							label Address:  
+							p <%= address %>
+						div.form-group
+							label Operating System:  
+							p <%= os %>
+
+	script(type="text/template", class="addServer")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
 				h3 Add server
+				hr
 				form(role="form").well
 					div.form-group
 						label Name
@@ -33,11 +58,21 @@ block content
 						select(name="os", id="os").form-control
 							option(value="Ubuntu 12.04") Ubuntu 12.04 
 							option(value="Centos 5") Centos 5
-					button(type="submit", class="btn btn-primary", id="submitAddServer") Save
-	script(type="text/template", class="editServerTemplate")
+					button(type="submit", class="btn btn-primary", id="submit") Save
+
+	script(type="text/template", class="editServer")
 		div.row
-			div(class="col-lg-6")
-				h3 Add server
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 Edit server
+					div.btn-group.pull-right
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#servers/<%= id %>">View</a>
+							li
+								<a href="#servers/delete/<%= id %>">Delete</a>
+				hr
 				form(role="form").well
 					div.form-group
 						label Name
@@ -66,70 +101,52 @@ block content
 						select(name="os", id="os").form-control
 							option(value="Ubuntu 12.04") Ubuntu 12.04 
 							option(value="Centos 5") Centos 5
-					button(type="submit", class="btn btn-primary", id="submitAddServer") Update
-	script(type="text/template", class="viewServer")
+					button(type="submit", class="btn btn-primary", id="submit") Update
+
+	script(type="text/template", class="deleteServer")
 		div.row
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-				div.hidden.sshCommand This is the command
-				h3 <%= name %>
-					button().sshHelp.pull-right.btn.btn-warning Help
+				h3 Delete server: <%= name %>
 				hr
 				div.well
-					div.form-group
-						label Name:
-						p <%= name %>
-					div.form-group
-						label Address:  
-						p <%= address %>
-					div.form-group
-						label SSH User:  
-						p <%= ssh_user %>
-					div.form-group
-						label SSH Port:  
-						p <%= ssh_port %>
-					div.form-group
-						label Operating System:  
-						p <%= os %>
-	script(type="text/template", class="removeServer")
-		div 
-			p 
-				strong Are you sure you want to delete the server <%= name %>?
-		button(type="submit", id="confirmDeleteSubmit").btn.btn-danger Confirm delete
-		a(href="/servers").btn.btn-primary Cancel
-	script(type="text/template", class="serverList")
-		div.well.well-sm 
-			span Control your servers here
-		table.table.table-hover.table-striped
-			thead
-				th Name
-				th Address
-				th SSH User
-				th SSH Port
-				th Operating System
-				th 
-			tbody
-				<% _.each(items, function(item) { %>
-				tr.item
-					td <%= item.name %>
-					td <%= item.address %>
-					td <%= item.ssh_user %>
-					td <%= item.ssh_port %>
-					td <%= item.os %>
-					td 
-						<a href="#server/<%= item.id %>" class="btn btn-primary">View</a>
-						<a href="#server/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
-						<a href="#server/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
-				<% }) %>
+					h4 Are you sure you want to delete the server <%= name %>?
+					br
+					div.btn-group
+						button(type="submit", id="submit").btn.btn-danger Confirm delete
+						<a href="servers#servers/<%= id %>" class="btn btn-primary">Cancel</a>
+
+	script(type="text/template", class="listServers")
+		div.row
+			div(class="col-lg-9 col-md-9 col-sm-12 col-xs-12")
+				table.table.table-hover.table-striped
+					thead
+						th.col-lg-11.col-md-11.col-sm-11.col-xs-11 Name
+						th 
+					tbody
+						<% _.each(items, function(item) { %>
+						tr.item
+							td 
+								<a href="#servers/<%= item.id %>"><%= item.name %></a>
+								div
+									small <%= item.address %> | OS: <%= item.os %>
+							td 
+								<a href="#servers/<%= item.id %>" class="btn btn-default">View</a>
+						<% }) %>
+
 	div#page
-		div.container
-			div.row
+		div#header
+			div.container
+				div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+					div.row
+						h1= title
+							div.pull-right.btn-group
+								a(href="#servers/add").btn.btn-primary Add server
+								a(href="#servers/actions").btn.btn-info Refresh status @
+						br
 				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-					h1= title
-						div.pull-right
-							a(href="#server/add").btn.btn-primary Add server
-					hr
-					div#messages
-					div#content
+					div.row
+						div#messages
+						div#content
 block scripts
 	script(type="text/javascript", src="javascripts/app/models/Models.js");
 	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
