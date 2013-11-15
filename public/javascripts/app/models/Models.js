@@ -2,6 +2,7 @@ Mariachi.Models.Recepie = Backbone.Model.extend({
 	defaults: {
 		name: "",
 		description: "",
+		parameters: "",
 		recepie: "",
 	},
 	urlRoot: "/api/recepies"
@@ -40,7 +41,9 @@ Mariachi.Models.Task = Backbone.Model.extend({
 		server: "",
 		user: "",
 		task: "",
-		type: ""
+		type: "",
+		started: "",
+		ended: ""
 	},
 	urlRoot: "/api/tasks"
 });
@@ -59,9 +62,9 @@ Mariachi.Models.Template = Backbone.Model.extend({
 	defaults: {
 		name: "",
 		description: "",
-		patterns: "",
-		template: "",
 		destination: "",
+		parameters: "",
+		template: "",
 	},
 	urlRoot: "/api/templates"
 });

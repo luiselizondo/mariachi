@@ -123,19 +123,6 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 	}
 });
 
-Mariachi.Views.Patterns = Backbone.View.extend({
-	el: "div.patterns",
-	template: _.template($(".pattern").html()),
-	initialize: function(pattern) {
-		this.render(pattern);
-	},
-	render: function(pattern) {
-		if(pattern) {
-			this.$el.append(this.template({pattern: pattern}));	
-		}
-	}
-});
-
 /**
  * Add server
  */
@@ -231,7 +218,6 @@ Mariachi.Views.AddTask = Backbone.View.extend({
 						console.log(response);
 					}
 				});
-
 			});
 		});
 
