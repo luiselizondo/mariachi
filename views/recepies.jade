@@ -135,6 +135,11 @@ block content
 		div.row.results.hidden
 			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
 				h4 Results
+					div
+						small
+							span#started
+						small 
+							span#ended
 					div.pull-right
 						small
 							span#deployStatus
@@ -163,21 +168,22 @@ block content
 
 	//- list recepies
 	script(type="text/template", class="listRecepies")
-		div(class="col-lg-9 col-md-9 col-sm-12 col-xs-12")
-			table.table.table-hover.table-striped
-				thead
-					th.col-lg-11.col-sm-11.col-md-11.col-xs-11 Name
-					th 
-				tbody
-					<% _.each(items, function(item) { %>
-					tr.item
-						td 
-							<a href="#recepies/<%= item.id %>"><%= item.name %></a>
-							div
-								small <%= item.description %>
-						td 
-							<a href="#recepies/<%= item.id %>" class="btn btn-default">View</a>
-					<% }) %>
+		div.row
+			div(class="col-lg-9 col-md-9 col-sm-12 col-xs-12")
+				table.table.table-hover.table-striped
+					thead
+						th.col-lg-11.col-sm-11.col-md-11.col-xs-11 Name
+						th 
+					tbody
+						<% _.each(items, function(item) { %>
+						tr.item
+							td 
+								<a href="#recepies/<%= item.id %>"><%= item.name %></a>
+								div
+									small <%= item.description %>
+							td 
+								<a href="#recepies/<%= item.id %>" class="btn btn-default">View</a>
+						<% }) %>
 
 	div#page
 		div#header

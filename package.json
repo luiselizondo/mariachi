@@ -17,6 +17,7 @@
     "connect-caminte": "0.0.1-6",
     "underscore": "~1.5.2",
     "async": "~0.2.9",
-    "mustache": "~0.7.3"
+    "mustache": "~0.7.3",
+    "dateformat": "~1.0.6-1.2.3"
   }
 }

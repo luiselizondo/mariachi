@@ -5,6 +5,7 @@ var _ = require("underscore")
  	, SSH = require("../../lib/ssh")
 	, User = require("../../lib/user")
 	, Tasks = require("../../lib/tasks")
+	, dateFormat = require("dateformat")
 	, user = new User()
 	, db = new Connection()
 	, tasks = new Tasks();
@@ -12,10 +13,26 @@ var _ = require("underscore")
 // require events, this is an instantiated class
 events.on("tasks:execute", function(id) {	
 	db.getTask(id, function(err, task) {
+
+		events.emit("tasks:start", {
+			task: task,
+			started: task.started,
+			stderr: null,
+			stdout: null,
+			status: "STARTED"
+		});
+
 		if(err) {
+			var now = new Date();
+
+			var ended = dateformat(now, "yyyy-mm-dd hh:mm:ss");
+
 			// if we can't get the task, emit the tasks:finished 
-			// event with an error
+			// event with an error prematurately
 			events.emit("tasks:finished", {
+				task: task,
+				started: task.started,
+				ended: ended,
 				stderr: err,
 				stdout: null,
 				status: "ERROR"
@@ -76,7 +93,9 @@ function postTask(req, res) {
 	// data.created = new Date();
 	// @todo change for a real value
 	data.user = 1;
-	// data.started = new Date();
+	var now = new Date();
+	// DATETIME FORMAT IS 'YYYY-MM-DD HH:MM:SS'
+	data.started = dateFormat(now, "yyyy-mm-dd hh:mm:ss");
 
 	db.saveTask(data, function(err, result) {
 		if(err) {

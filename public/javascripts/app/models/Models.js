@@ -41,7 +41,9 @@ Mariachi.Models.Task = Backbone.Model.extend({
 		server: "",
 		user: "",
 		task: "",
-		type: ""
+		type: "",
+		started: "",
+		ended: ""
 	},
 	urlRoot: "/api/tasks"
 });

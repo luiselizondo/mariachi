@@ -367,6 +367,9 @@ Mariachi.Views.DeployRecepie = Backbone.View.extend({
 		Mariachi.io.on("tasks:start", function(data) {
 			// Remove the form
 			$("span#deployStatus").removeClass().addClass("label label-info").text("EXECUTING");
+			console.log("Started");
+			console.log(data.started);
+			$("span#started").text("Started: " + data.started);
 
 			if(!_.isNull(data.stderr)) {
 				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
@@ -394,6 +397,8 @@ Mariachi.Views.DeployRecepie = Backbone.View.extend({
 		});
 
 		Mariachi.io.on("tasks:finished", function(data) {
+			console.log(data.ended);
+			$("span#ended").text("Ended: " + data.ended);
 			if(data.status === "SUCCESS") {
 				$("span#deployStatus").removeClass().addClass("label label-success").text(data.status);
 			}	
