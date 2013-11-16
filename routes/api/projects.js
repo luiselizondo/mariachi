@@ -6,8 +6,8 @@ var Connection = require("../../lib/database")
 	, db = new Connection()
 	, user = new User();
 	
-events.on("projects:deploy", function(data) {
-	new Project(data);
+events.on("projects:deploy", function(id) {
+	new Project(id);
 });
 
 /**
@@ -71,6 +71,7 @@ function postProject(req, res) {
 		}
 
 		if(result) {
+			events.emit("projects:deploy", result.insertId);
 			res.send(201, result);
 		}
 	})
@@ -90,10 +91,6 @@ function putProject(req, res) {
 		}
 
 		if(result) {
-
-			if(data.status === "DEPLOY") {
-				events.emit("projects:deploy", data);
-			}
 			res.send(201, result);
 		}
 	})
