@@ -17,7 +17,38 @@ Mariachi.Models.Server = Backbone.Model.extend({
 		os: "",
 		status: 0
 	},
-	urlRoot: "/api/servers"
+	urlRoot: "/api/servers",
+	url: "/api/servers",
+	createSSHKey: function(id, callback) {
+		$.ajax({
+      type: "GET",
+      url: this.url + "/" + id + "/createSSHKey",
+      dataType: "json",
+      success: function(data){
+      	console.log(data);
+        callback(false, data);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("FETCH FAILED: " + errorThrown);
+        callback(errorThrown, false);
+      }
+	  });
+	},
+	getSSHKey: function(id, callback) {
+		$.ajax({
+      type: "GET",
+      url: this.url + "/" + id + "/getSSHKey",
+      dataType: "json",
+      success: function(data){
+      	console.log(data);
+        callback(false, data);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("FETCH FAILED: " + errorThrown);
+        callback(errorThrown, false);
+      }
+	  });
+	}
 });
 
 /**

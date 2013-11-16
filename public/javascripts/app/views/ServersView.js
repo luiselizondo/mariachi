@@ -44,6 +44,8 @@ Mariachi.Views.ViewServer = Backbone.View.extend({
 	el: "#content",
 	events: {
 		"click button.sshHelp": "sshHelp",
+		"click a.createSSHKey": "createSSHKey",
+		"click a.getSSHKey": "getSSHKey"
 	},
 	serverId: null,
 	template: _.template($(".viewServer").html()),
@@ -79,6 +81,48 @@ Mariachi.Views.ViewServer = Backbone.View.extend({
 
 		modal.open(function() {
 
+		});
+	},
+	createSSHKey: function(e) {
+		e.preventDefault();
+		var self = this;
+		var id = self.serverId;
+		var model = new Mariachi.Models.Server({id: id});
+		model.createSSHKey(id, function(err, result) {
+			var content = '';
+			if(err) content = err.error;
+			if(result) content = result.result;
+
+			var modal = new Backbone.BootstrapModal({
+				content: content,
+				title: "Created SSH Key",
+				animate: true
+			});
+
+			modal.open(function() {
+
+			});
+		});
+	},
+	getSSHKey: function(e) {
+		e.preventDefault();
+		var self = this;
+		var id = self.serverId;
+		var model = new Mariachi.Models.Server({id: id});
+		model.getSSHKey(id, function(err, result) {
+			var content = '';
+			if(err) content = err.error;
+			if(result) content = result.result;
+
+			var modal = new Backbone.BootstrapModal({
+				content: content,
+				title: "SSH Key of this server",
+				animate: true
+			});
+
+			modal.open(function() {
+
+			});
 		});
 	}
 });
