@@ -11,7 +11,6 @@ Mariachi.Routers.ServersRouter = Backbone.Router.extend({
 	},
 	home: function() {
 		new Mariachi.Views.ListServers();
-		console.log("Home");
 	},
 	getServer: function(id) {
 		new Mariachi.Views.ViewServer({id: id});

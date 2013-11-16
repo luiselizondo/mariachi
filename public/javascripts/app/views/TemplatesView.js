@@ -1,3 +1,16 @@
+Mariachi.Views.Parameters = Backbone.View.extend({
+	el: "div.parameters",
+	template: _.template($(".parameter").html()),
+	initialize: function(parameter) {
+		this.render(parameter);
+	},
+	render: function(parameter) {
+		if(parameter) {
+			this.$el.append(this.template({parameter: parameter}));	
+		}
+	}
+});
+
 /**
  * List servers
  */
@@ -284,8 +297,15 @@ Mariachi.Views.DeployTemplate = Backbone.View.extend({
 		self.loading.show();
 
 		var servers = new Mariachi.Collections.Servers();
-		servers.fetch({
-			success: function(model, response) {
+		servers.servers.getWithStatus(1, function(err, response) {
+				if(err) {
+					console.log(err);
+					new Mariachi.Views.MessageView({
+						message: "Error: " + err,
+						type: "danger"
+					})
+				}
+
 				if(response.length) {
 					var options = $("#servers");
 					_.each(response, function(item) {
@@ -301,13 +321,8 @@ Mariachi.Views.DeployTemplate = Backbone.View.extend({
 					// Hide the execute button
 					$("form").addClass("hidden");
 				}
+
 				self.loading.hide();
-				
-			},
-			error: function(model, response) {
-				console.log(response);
-				self.loading.hide();
-			}
 		});
 	},
 	addParamsForm: function(response) {

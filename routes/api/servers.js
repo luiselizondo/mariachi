@@ -10,16 +10,31 @@ var Connection = require("../../lib/database")
  * Get all servers
  */
 function getServers(req, res) {
-	db.getServers(function(err, results) {
-		if(err) {
-			console.log(err);
-			res.send(401, err);
-		}
+	if(req.query.status) {
+		db.getServersWithStatus(req.query.status, function(err, results) {
+			if(err) {
+				console.log(err);
+				res.send(401, err);
+			}
 
-		if(results) {
-			res.send(200, results);
-		}
-	});
+			if(results) {
+				console.log(results);
+				res.send(200, results);
+			}
+		});
+	}
+	else {
+		db.getServers(function(err, results) {
+			if(err) {
+				console.log(err);
+				res.send(401, err);
+			}
+
+			if(results) {
+				res.send(200, results);
+			}
+		});
+	}
 }
 
 /**
@@ -45,6 +60,8 @@ function getServer(req, res) {
 function postServer(req, res) {
 	var data = req.body;
 	
+	// always set the status of a server as 0
+	data.status = 0;
 	db.saveServer(data, function(err, result) {
 		if(err) {
 			console.log(err);
@@ -112,7 +129,6 @@ function getSSHKey(req, res) {
 		});
 	});
 }
-
 
 /**
  * Get actions

@@ -22,16 +22,3 @@ Mariachi.Views.Loading = Backbone.View.extend({
 		$(this.$el).addClass("hidden");
 	}
 });
-
-Mariachi.Views.Parameters = Backbone.View.extend({
-	el: "div.parameters",
-	template: _.template($(".parameter").html()),
-	initialize: function(parameter) {
-		this.render(parameter);
-	},
-	render: function(parameter) {
-		if(parameter) {
-			this.$el.append(this.template({parameter: parameter}));	
-		}
-	}
-});

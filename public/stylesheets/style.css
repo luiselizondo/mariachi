@@ -25,6 +25,7 @@ div.loading {
 	text-align: center;
 	font-weight: bold;
 	font-size: 18px;
+	z-index: 10000;
 }
 
 div.loading .loadingText {

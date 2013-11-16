@@ -120,7 +120,8 @@ block content
 			div(class="col-lg-9 col-md-9 col-sm-12 col-xs-12")
 				table.table.table-hover.table-striped
 					thead
-						th.col-lg-11.col-md-11.col-sm-11.col-xs-11 Name
+						th.col-lg-10.col-md-10.col-sm-10.col-xs-10 Name
+						th.col-lg-1.col-md-1.col-sm-1.col-xs-1 Status
 						th 
 					tbody
 						<% _.each(items, function(item) { %>
@@ -129,13 +130,19 @@ block content
 								<a href="#servers/<%= item.id %>"><%= item.name %></a>
 								div
 									small <%= item.address %> | OS: <%= item.os %>
+							td
+								<% if(item.status === 1) { %>
+								span.status.label.label-success OK
+								<% } else { %>
+								span.status.label.label-danger ERROR
+								<% } %>
 							td 
 								<a href="#servers/<%= item.id %>" class="btn btn-default">View</a>
 						<% }) %>
 			div(class="col-lg-3")
 				br
 				div.pull-right
-					a(href="#").btn.btn-info.refreshStatus Refresh status @
+					a(href="#").btn.btn-info.refreshStatus Refresh status
 
 	div#page
 		div#header

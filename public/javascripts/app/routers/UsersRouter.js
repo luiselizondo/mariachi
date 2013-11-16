@@ -11,7 +11,6 @@ Mariachi.Routers.UsersRouter = Backbone.Router.extend({
 	},
 	home: function() {
 		new Mariachi.Views.ListUsersView();
-		console.log("Home");
 	},
 	getUser: function(id) {
 		new Mariachi.Views.ViewUserView({id: id});

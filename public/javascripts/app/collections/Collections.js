@@ -6,10 +6,24 @@ Mariachi.Collections.Recepies = Backbone.Collection.extend({
 Mariachi.Collections.Servers = Backbone.Collection.extend({
 	model: Mariachi.Models.Server,
 	url: "/api/servers",
+	getWithStatus: function(status, callback) {
+		$.ajax({
+      type: "GET",
+      url: this.url,
+      data: {status: status},
+      dataType: "json",
+      success: function(data){
+      	console.log(data);
+        callback(false, data);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("FETCH FAILED: " + errorThrown);
+        callback(errorThrown, false);
+      }
+	  });
+	},
 	refreshStatus: function(callback) {
-		console.log("Cdalled refresh")
 		var url = this.url + "/actions";
-		console.log(url);
 
 		$.ajax({
       type: "GET",
@@ -17,11 +31,10 @@ Mariachi.Collections.Servers = Backbone.Collection.extend({
       data: {action: "refreshStatus"},
       dataType: "json",
       success: function(data){
-          console.log(data);
-          callback(data);
+        callback(data);
       },
       error: function(jqXHR, textStatus, errorThrown){
-          console.log("FETCH FAILED: " + errorThrown);
+        console.log("FETCH FAILED: " + errorThrown);
       }
 	  });
 	}

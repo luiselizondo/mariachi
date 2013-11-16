@@ -7,7 +7,6 @@ Mariachi.Views.ListServers = Backbone.View.extend({
 		"click .refreshStatus": "refreshStatus"
 	},
 	initialize: function() {
-		console.log("Initialized home views");
 		this.render();
 	},
 	loading: new Mariachi.Views.Loading(),
@@ -17,7 +16,6 @@ Mariachi.Views.ListServers = Backbone.View.extend({
 		var items = new Mariachi.Collections.Servers();
 		items.fetch({
 			error: function(collection, response) {
-				console.log(response);
 				self.loading.hide();
 			},
 			success: function(collection, response) {
@@ -28,12 +26,13 @@ Mariachi.Views.ListServers = Backbone.View.extend({
 		});
 	},
 	refreshStatus: function(e) {
+		var self = this;
+		self.loading.show();
 		e.preventDefault();
 
 		var items = new Mariachi.Collections.Servers();
 		items.refreshStatus(function(data) {
-			console.log("Refreshing status");
-			console.log(data);
+			self.render();
 		});
 	}
 });
@@ -298,6 +297,5 @@ Mariachi.Views.DeleteServer = Backbone.View.extend({
 				self.loading.hide();
 			}
 		});
-
 	}
 });
