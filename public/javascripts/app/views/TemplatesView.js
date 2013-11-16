@@ -297,7 +297,7 @@ Mariachi.Views.DeployTemplate = Backbone.View.extend({
 		self.loading.show();
 
 		var servers = new Mariachi.Collections.Servers();
-		servers.servers.getWithStatus(1, function(err, response) {
+		servers.getWithStatus(1, function(err, response) {
 				if(err) {
 					console.log(err);
 					new Mariachi.Views.MessageView({
