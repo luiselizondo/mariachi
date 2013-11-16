@@ -1,8 +1,10 @@
-var Connection = require("../../lib/database");
-var db = new Connection();
-var User = require("../../lib/user");
-var user = new User();
-var config = require("../../config");
+var Connection = require("../../lib/database")
+	, Actions = require("../../lib/actions")
+	, User = require("../../lib/user")
+	, db = new Connection()
+	, actions = new Actions()
+	, user = new User()
+	, config = require("../../config");
 
 /**
  * Get all servers
@@ -111,11 +113,26 @@ function getSSHKey(req, res) {
 	});
 }
 
+
+/**
+ * Get actions
+ */
+function getActions(req, res) {
+	// @see lib/actions.js
+	switch(req.query.action) {
+		case "refreshStatus": 
+			actions.refreshStatus(req, res);
+			break;	
+	}
+}
+
 module.exports = function(app) {
 	app.get("/api/servers", user.auth, getServers);
+	app.get("/api/servers/actions", user.auth, getActions);
 	app.get("/api/servers/:id", user.auth, getServer);
 	app.post("/api/servers", user.auth, postServer);
 	app.put("/api/servers/:id", user.auth, putServer);
 	app.delete("/api/servers/:id", user.auth, deleteServer);
 	app.get("/api/ssh/key/:id", user.auth, getSSHKey);
+
 }

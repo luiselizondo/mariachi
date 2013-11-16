@@ -4,7 +4,7 @@
 Mariachi.Views.ListServers = Backbone.View.extend({
 	el: "#content",
 	events: {
-		"click .btn": "getServer"
+		"click .refreshStatus": "refreshStatus"
 	},
 	initialize: function() {
 		console.log("Initialized home views");
@@ -27,8 +27,14 @@ Mariachi.Views.ListServers = Backbone.View.extend({
 			}
 		});
 	},
-	getServer: function(e) {
-		
+	refreshStatus: function(e) {
+		e.preventDefault();
+
+		var items = new Mariachi.Collections.Servers();
+		items.refreshStatus(function(data) {
+			console.log("Refreshing status");
+			console.log(data);
+		});
 	}
 });
 

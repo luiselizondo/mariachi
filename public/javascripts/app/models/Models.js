@@ -16,7 +16,7 @@ Mariachi.Models.Server = Backbone.Model.extend({
 		ssh_port: "22",
 		os: ""
 	},
-	urlRoot: "/api/servers",
+	urlRoot: "/api/servers"
 });
 
 /**

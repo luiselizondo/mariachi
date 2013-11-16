@@ -5,7 +5,26 @@ Mariachi.Collections.Recepies = Backbone.Collection.extend({
 
 Mariachi.Collections.Servers = Backbone.Collection.extend({
 	model: Mariachi.Models.Server,
-	url: "/api/servers"
+	url: "/api/servers",
+	refreshStatus: function(callback) {
+		console.log("Cdalled refresh")
+		var url = this.url + "/actions";
+		console.log(url);
+
+		$.ajax({
+      type: "GET",
+      url: this.url + "/actions",
+      data: {action: "refreshStatus"},
+      dataType: "json",
+      success: function(data){
+          console.log(data);
+          callback(data);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+          console.log("FETCH FAILED: " + errorThrown);
+      }
+	  });
+	}
 });
 
 Mariachi.Collections.Projects = Backbone.Collection.extend({
