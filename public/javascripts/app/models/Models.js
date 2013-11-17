@@ -18,14 +18,12 @@ Mariachi.Models.Server = Backbone.Model.extend({
 		status: 0
 	},
 	urlRoot: "/api/servers",
-	url: "/api/servers",
 	createSSHKey: function(id, callback) {
 		$.ajax({
       type: "GET",
-      url: this.url + "/" + id + "/createSSHKey",
+      url: this.urlRoot + "/" + id + "/createSSHKey",
       dataType: "json",
       success: function(data){
-      	console.log(data);
         callback(false, data);
       },
       error: function(jqXHR, textStatus, errorThrown){
@@ -37,10 +35,9 @@ Mariachi.Models.Server = Backbone.Model.extend({
 	getSSHKey: function(id, callback) {
 		$.ajax({
       type: "GET",
-      url: this.url + "/" + id + "/getSSHKey",
+      url: this.urlRoot + "/" + id + "/getSSHKey",
       dataType: "json",
       success: function(data){
-      	console.log(data);
         callback(false, data);
       },
       error: function(jqXHR, textStatus, errorThrown){

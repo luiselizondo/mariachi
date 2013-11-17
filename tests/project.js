@@ -3,19 +3,40 @@ var should = require("should")
 	, Drupal6 = require("../lib/drupal6");
 
 describe("Drupal6", function() {
-	it("should return an object", function(done) {
-
+	it("Should create a database and drop it", function(done) {
+		this.timeout(15000);
 		var data = config;
 
 		var project = new Drupal6(data);
-		project.cloneProject(function(err, stdout, stderr) {
-			console.log(err);
-			console.log(stdout);
-			console.log(stderr);
-			
-			should.strictEqual(undefined, stderr);
+		project.createDatabase(function(err, stdout, stderr) {
+			should.not.exist(err);
+			should.not.exist(stderr);
 			done();
 		});
-		
+
+		after(function(done) {
+			project.dropDatabase(function(err, stdout, stderr) {
+				should.not.exist(err);
+				should.not.exist(stderr);
+				done();
+			})
+		});
 	});
+
+	// it("Should drop a database", function(done) {
+	// 	var data = config;
+
+	// 	var project = new Drupal6(data);
+	// 	before(function(done) {
+	// 		project.createDatabase(function(err, stdout, stderr) {
+	// 			done();
+	// 		})
+	// 	});
+
+	// 	project.dropDatabase(function(err, stdout, stderr) {
+	// 		should.strictEqual(undefined, err);
+	// 		should.strictEqual(undefined, stderr);
+	// 		done();
+	// 	});
+	// });
 });
