@@ -291,3 +291,122 @@ Mariachi.Views.DeleteProject = Backbone.View.extend({
 
 	}
 });
+
+/**
+ * Deploy template
+ */
+Mariachi.Views.DeployProject = Backbone.View.extend({
+	el: "#content",
+	loading: new Mariachi.Views.Loading(),
+	events: {
+		"click #execute": "execute"
+	},
+	templateId: null,
+	template: _.template($(".deployProject").html()),
+	initialize: function(data) {
+		this.render(data.id);
+		this.projectId = data.id;
+	},
+	render: function(id) {
+		var self = this;
+		var model = new Mariachi.Models.Project({id: id});
+		model.fetch({
+			success: function(model, response) {
+				self.$el.html(self.template(model.toJSON()));
+				self.loading.hide();
+			},
+			error: function(model, response) {
+				console.log(response);
+				self.loading.hide();
+			}
+		});
+	},
+	execute: function(e) {
+		// On execution, a task will be created
+		e.preventDefault();
+		var self = this;
+		
+		var data = {}
+
+		data.type = "project";
+		data.task = self.projectId;
+		data.server = 0;
+
+		var model = new Mariachi.Models.Task(data);
+		console.log("Posting data");
+		model.save(data, {
+			success: function(model, response) {
+				var collection = new Mariachi.Collections.Tasks();
+				collection.add(model);
+			},
+			error: function(model, error) {
+				console.log(error);
+				new Mariachi.Views.MessageView({
+					message: "Error: " + error.statusText + "(" + error.status + ")",
+					type: "danger"
+				});
+
+				self.loading.hide();
+			}
+		});
+		
+		self.loading.hide();
+		self.listen();
+	},
+	listen: function() {
+		var self = this;
+		
+		$("form").fadeOut();
+
+		// Clean the well and show the div
+		$(".results").removeClass("hidden");
+		$(".results").fadeIn();
+		$(".stdout").html(" ");
+		$(".stderr").html(" ");
+
+		Mariachi.io.on("tasks:start", function(data) {
+			// Remove the form
+			$("span#deployStatus").removeClass().addClass("label label-info").text("EXECUTING");
+			console.log("Started");
+			console.log(data.started);
+			$("span#started").text("Started: " + data.started);
+
+			if(!_.isNull(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").html(stderr);
+
+				$("span#deployStatus").removeClass().addClass("label label-danger").text("ERROR");
+			}
+
+			if(!_.isNull(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").html(stdout);
+			}
+		});
+
+		Mariachi.io.on("tasks:finished", function(data) {
+			console.log("Got tasks:finished");
+			console.log(data);
+			$("span#ended").text("Ended: " + data.ended);
+			if(data.status === "SUCCESS") {
+				$("span#deployStatus").removeClass().addClass("label label-success").text(data.status);
+			}	
+
+			if(data.status === "ERROR") {
+				$("span#deployStatus").removeClass().addClass("label label-danger").text(data.status);
+			}
+			
+			if(!_.isNull(data.stderr) && !_.isUndefined(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").html(stderr);
+			}
+
+			if(!_.isNull(data.stdout) && !_.isUndefined(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").html(stdout);
+			}
+			
+			self.loading.hide();
+		});
+	}
+});

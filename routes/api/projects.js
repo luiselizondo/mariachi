@@ -38,7 +38,6 @@ function getProject(req, res) {
 		}
 
 		if(result) {
-			events.emit("projects:deploy", result);
 			res.send(200, result);
 		}
 	});
@@ -63,7 +62,6 @@ function postProject(req, res) {
 	delete data.type;
 	insert.data = JSON.stringify(data);
 	
-	console.log(insert);
 	db.saveProject(insert, function(err, result) {
 		if(err) {
 			console.log(err);
@@ -71,7 +69,6 @@ function postProject(req, res) {
 		}
 
 		if(result) {
-			events.emit("projects:deploy", result.insertId);
 			res.send(201, result);
 		}
 	})

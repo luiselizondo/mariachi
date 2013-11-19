@@ -6,13 +6,17 @@ var _ = require("underscore")
 	, User = require("../../lib/user")
 	, Tasks = require("../../lib/tasks")
 	, dateFormat = require("dateformat")
+	, Project = require("../../lib/projects")
 	, user = new User()
 	, db = new Connection()
 	, tasks = new Tasks();
 
 // require events, this is an instantiated class
 events.on("tasks:execute", function(id) {	
+	console.log("Task id: " + id);
 	db.getTask(id, function(err, task) {
+		console.log("Task");
+		console.log(task);
 
 		events.emit("tasks:start", {
 			task: task,
@@ -45,6 +49,11 @@ events.on("tasks:execute", function(id) {
 			}
 			if(task.type == "template") {
 				tasks.deployTemplate(task);
+			}
+			if(task.type == "project") {
+				console.log("Task");
+				console.log(task.task);
+				var project = new Project(task.task);
 			}
 		}
 	});
@@ -102,6 +111,7 @@ function postTask(req, res) {
 
 	db.saveTask(data, function(err, result) {
 		if(err) {
+			console.log("db.saveTask err");
 			console.log(err);
 			res.send(500, err);
 		}
