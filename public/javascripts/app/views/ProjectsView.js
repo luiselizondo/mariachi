@@ -364,7 +364,7 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 		$(".stdout").html(" ");
 		$(".stderr").html(" ");
 
-		Mariachi.io.on("tasks:start", function(data) {
+		Mariachi.io.on("projects:start", function(data) {
 			// Remove the form
 			$("span#deployStatus").removeClass().addClass("label label-info").text("EXECUTING");
 			console.log("Started");
@@ -384,7 +384,21 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 			}
 		});
 
-		Mariachi.io.on("tasks:finished", function(data) {
+		Mariachi.io.on("projects:stream", function(data) {
+			statusCell.text(data.status);
+
+			if(!_.isNull(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").html(stderr);
+			}
+
+			if(!_.isNull(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").html(stdout);
+			}
+		});
+
+		Mariachi.io.on("projects:finished", function(data) {
 			console.log("Got tasks:finished");
 			console.log(data);
 			$("span#ended").text("Ended: " + data.ended);
