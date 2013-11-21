@@ -15,6 +15,10 @@ block content
 								<a href="#servers/edit/<%= id %>">Edit</a>
 							li
 								<a href="#servers/delete/<%= id %>">Delete</a>
+							li
+								a(href="#", class="createSSHKey") Create SSH Key
+							li
+								a(href="#", class="getSSHKey") Get SSH Key
 				hr
 				div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
 					div.row
@@ -162,7 +166,7 @@ block scripts
 	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
 	script(type="text/javascript", src="javascripts/app/views/ServersView.js");
 	script(type="text/javascript", src="javascripts/app/routers/ServersRouter.js")
-	script(type="text/javascript")
+	script(type="text/javascript").
 		function main() {
 			new Mariachi.Routers.ServersRouter();
 			Backbone.history.start();	

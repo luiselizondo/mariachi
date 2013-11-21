@@ -1,6 +1,30 @@
 extends layout
 
 block content
+	script(type="text/template", class="viewProject")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 <%= name %>
+					div.btn-group.pull-right
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#projects/deploy/<%= id %>">Deploy</a>
+							li
+								<a href="#projects/history/<%= id %>">Deploy history</a>
+							li
+								<a href="#projects/edit/<%= id %>">Edit</a>
+							li
+								<a href="#projects/delete/<%= id %>">Delete</a>
+				hr
+				div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+					div.row
+						h4 Project Type:
+						p <%= type %>
+						br
+						p <%= description %>
+						br
 	script(type="text/template", class="addProject")
 		div.row
 			div(class="col-lg-12")
@@ -10,7 +34,7 @@ block content
 						div.form-group
 							label.control-label.col-sm-3 Type
 							div.col-sm-9
-								select(name="type", id="name", class="form-control")
+								select(name="type", id="type", class="form-control")
 									option() - Select -
 									option(value="nodejs") Node.js
 									option(value="joomla") Joomla
@@ -134,60 +158,98 @@ block content
 						span.help-block Email
 					div.form-group
 						label Password
-						<input type="password" name="password" class="form-control" id="password />
+						<input type="password" name="password" class="form-control" id="password" />
 						span.help-block Password
 					button(type="submit", class="btn btn-primary", id="submit") Update
-	script(type="text/template", class="viewProject")
-		div.row
-			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-				h3 <%= name %>
-				div.well
-					div.form-group
-						label Name:
-						p <%= name %>
-					div.form-group
-						label Type:
-						p <%= type %>
+	
 	script(type="text/template", class="deleteProject")
 		div 
 			p 
 				strong Are you sure you want to delete the Project <%= name %>?
 		button(type="submit", id="submit").btn.btn-danger Confirm delete
 		a(href="/Projects").btn.btn-primary Cancel
-	script(type="text/template", class="listProjects")
-		div.well.well-sm 
-			span Control your Projects here
-		table.table.table-hover.table-striped
-			thead
-				th Name
-				th Email
-				th 
-			tbody
-				<% _.each(items, function(item) { %>
-				tr.item
-					td <%= item.name %>
-					td <%= item.fqdn %>
-					td 
-						<a href="#projects/<%= item.id %>" class="btn btn-primary">View</a>
-						<a href="#projects/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
-						<a href="#projects/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
-				<% }) %>
-	div#page
-		div.container
-			div.row
-				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-					h1= title
+
+	//- deploy recepie
+	script(type="text/template", class="deployProject")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 Deploy project: <%= name %>
+					div.btn-group.pull-right
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#projects/<%= id %>">View</a>
+							li
+								<a href="#projects/history/<%= id %>">Deploy history</a>
+							li
+								<a href="#projects/edit/<%= id %>">Edit</a>
+							li
+								<a href="#projects/delete/<%= id %>">Delete</a>
+				hr
+				div.row
+					div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+						h4 Project Type:
+						p <%= type %>
+						form(role="form")
+							br
+							button(type="button", id="execute").btn.btn-success Deploy
+							br
+				div(class="col-lg-3 col-md-3 col-sm-3")
+		div.row.results.hidden
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h4 Results
+				div.row
+					div(class="col-lg-10 col-md-10 col-sm-10 col-xs-10")
+						span#started
+						span
+						span#ended
+					div(class="col-lg-2 col-md-2 col-sm-2 col-xs-2")
 						div.pull-right
-							a(href="#projects/add").btn.btn-primary Add Project
-					hr
-					div#messages
-					div#content
+							span#deployStatus
+				hr
+				div
+					span(class="label label-info") stdout
+				br
+				div.well.stdout
+				div
+					span(class="label label-danger") stderr
+				br
+				div.well.stderr  
+	script(type="text/template", class="listProjects")
+		div.row
+			div(class="col-lg-9 col-md-9 col-sm-12 col-xs-12")	
+				table.table.table-hover.table-striped
+					thead
+						th.col-lg-11.col-md-11.col-sm-11.col-xs-11 Name
+						th 
+					tbody
+						<% _.each(items, function(item) { %>
+						tr.item
+							td
+								<a href="#projects/<%= item.id %>"><%= item.name %></a>
+							td 
+								<a href="#projects/<%= item.id %>" class="btn btn-default">View</a>
+						<% }) %>
+	div#page
+		div#header
+			div.container
+				div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+					div.row
+						h1= title
+							div.pull-right
+								a(href="#projects/add").btn.btn-primary Add project
+						br
+				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+					div.row
+						div#messages
+						div#content
 block scripts
 	script(type="text/javascript", src="javascripts/app/models/Models.js");
 	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
 	script(type="text/javascript", src="javascripts/app/views/ProjectsView.js");
 	script(type="text/javascript", src="javascripts/app/routers/ProjectsRouter.js")
-	script(type="text/javascript")
+	script(type="text/javascript").
 		function main() {
 			new Mariachi.Routers.ProjectsRouter();
 			Backbone.history.start();	

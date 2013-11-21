@@ -35,7 +35,7 @@ if(!config) {
 
 var CaminteStore = require("connect-caminte")(express);
 var io = require('socket.io');
-var io = io.listen(server);
+var io = io.listen(server, {log: false});
 var User = require("./lib/user");
 var user = new User();
 

@@ -138,14 +138,30 @@ function getActions(req, res) {
 	switch(req.query.action) {
 		case "refreshStatus": 
 			actions.refreshStatus(req, res);
-			break;	
+			break;
 	}
+}
+
+/** 
+ * Creates a new SSH Key on the server 
+ */
+function getCreateSSHKey(req, res) {
+	actions.getCreateSSHKey(req, res);
+}
+
+/** 
+ * Gets an SSH Key 
+ */
+function getGetSSHKey(req, res) {
+	actions.getGetSSHKey(req, res);
 }
 
 module.exports = function(app) {
 	app.get("/api/servers", user.auth, getServers);
 	app.get("/api/servers/actions", user.auth, getActions);
 	app.get("/api/servers/:id", user.auth, getServer);
+	app.get("/api/servers/:id/createSSHKey", user.auth, getCreateSSHKey);
+	app.get("/api/servers/:id/getSSHKey", user.auth, getGetSSHKey);
 	app.post("/api/servers", user.auth, postServer);
 	app.put("/api/servers/:id", user.auth, putServer);
 	app.delete("/api/servers/:id", user.auth, deleteServer);

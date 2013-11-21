@@ -51,7 +51,7 @@ div#loginForm {
 	top: 40%;
 }
 
-.sshkey-help {
+.sshkey-help, .modal-body {
 	word-wrap: break-word;
 }
 
