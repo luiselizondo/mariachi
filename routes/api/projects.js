@@ -4,11 +4,10 @@ var Connection = require("../../lib/database")
 	, User = require("../../lib/user")
 	, Project = require("../../lib/projects")
 	, db = new Connection()
+	, EventEmitter = require("events").EventEmitter
+	, e = new EventEmitter()
 	, user = new User();
-	
-events.on("projects:deploy", function(id) {
-	new Project(id);
-});
+
 
 /**
  * Get all Projects
@@ -111,10 +110,19 @@ function deleteProject(req, res) {
 	});
 }
 
+function deployProject(req, res) {
+	var id = req.params.id;
+	var project = new Project(id);
+	project.deploy();
+	
+	res.send(200, {message: "Deployment started"});
+}
+
 module.exports = function(app) {
 	app.get("/api/projects", user.auth, getProjects);
 	app.get("/api/projects/:id", user.auth, getProject);
 	app.post("/api/projects", user.auth, postProject);
 	app.put("/api/projects/:id", user.auth, putProject);
+	app.post("/api/projects/:id/deploy", user.auth, deployProject);
 	app.delete("/api/projects/:id", user.auth, deleteProject);
 }

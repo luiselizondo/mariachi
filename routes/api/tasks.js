@@ -50,11 +50,6 @@ events.on("tasks:execute", function(id) {
 			if(task.type == "template") {
 				tasks.deployTemplate(task);
 			}
-			if(task.type == "project") {
-				console.log("Task");
-				console.log(task.task);
-				var project = new Project(task.task);
-			}
 		}
 	});
 });

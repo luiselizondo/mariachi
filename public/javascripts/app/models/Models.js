@@ -54,11 +54,28 @@ Mariachi.Models.Server = Backbone.Model.extend({
 Mariachi.Models.Project = Backbone.Model.extend({
 	defaults: {
 		name: "",
+		description: "",
 		type: "",
 		fqdn: "",
+		stdout: "",
+		stderr: "",
 		data: {}
 	},
-	urlRoot: "/api/projects"
+	urlRoot: "/api/projects",
+	deploy: function(id, callback) {
+		$.ajax({
+      type: "POST",
+      url: this.urlRoot + "/" + id + "/deploy",
+      dataType: "json",
+      success: function(data){
+        callback(false, data);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("FETCH FAILED: " + errorThrown);
+        callback(errorThrown, false);
+      }
+	  });
+	},
 });
 
 /**

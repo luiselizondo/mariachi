@@ -301,7 +301,7 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 	events: {
 		"click #execute": "execute"
 	},
-	templateId: null,
+	projectId: null,
 	template: _.template($(".deployProject").html()),
 	initialize: function(data) {
 		this.render(data.id);
@@ -325,28 +325,20 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 		// On execution, a task will be created
 		e.preventDefault();
 		var self = this;
-		
-		var data = {}
 
-		data.type = "project";
-		data.task = self.projectId;
-		data.server = 0;
-
-		var model = new Mariachi.Models.Task(data);
-		console.log("Posting data");
-		model.save(data, {
-			success: function(model, response) {
-				var collection = new Mariachi.Collections.Tasks();
-				collection.add(model);
-			},
-			error: function(model, error) {
-				console.log(error);
+		var model = new Mariachi.Models.Project({id: self.projectId});
+		model.deploy(self.projectId, function(err, result) {
+			if(err) {
 				new Mariachi.Views.MessageView({
-					message: "Error: " + error.statusText + "(" + error.status + ")",
-					type: "danger"
+					message: "Error: " + result.message, 
+					type:"danger"
 				});
-
-				self.loading.hide();
+			}
+			if(result) {
+				new Mariachi.Views.MessageView({
+					message: result.message, 
+					type:"success"
+				});
 			}
 		});
 		
@@ -363,6 +355,9 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 		$(".results").fadeIn();
 		$(".stdout").html(" ");
 		$(".stderr").html(" ");
+
+		var statusCell = $("p.status");
+		statusCell.text("EXECUTING");
 
 		Mariachi.io.on("projects:start", function(data) {
 			// Remove the form
@@ -385,6 +380,7 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 		});
 
 		Mariachi.io.on("projects:stream", function(data) {
+			console.log(data);
 			statusCell.text(data.status);
 
 			if(!_.isNull(data.stderr)) {

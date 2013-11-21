@@ -1,6 +1,30 @@
 extends layout
 
 block content
+	script(type="text/template", class="viewProject")
+		div.row
+			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+				h3 <%= name %>
+					div.btn-group.pull-right
+						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+							span.caret
+						ul(role="menu").dropdown-menu
+							li
+								<a href="#projects/deploy/<%= id %>">Deploy</a>
+							li
+								<a href="#projects/history/<%= id %>">Deploy history</a>
+							li
+								<a href="#projects/edit/<%= id %>">Edit</a>
+							li
+								<a href="#projects/delete/<%= id %>">Delete</a>
+				hr
+				div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+					div.row
+						h4 Project Type:
+						p <%= type %>
+						br
+						p <%= description %>
+						br
 	script(type="text/template", class="addProject")
 		div.row
 			div(class="col-lg-12")
@@ -10,7 +34,7 @@ block content
 						div.form-group
 							label.control-label.col-sm-3 Type
 							div.col-sm-9
-								select(name="type", id="name", class="form-control")
+								select(name="type", id="type", class="form-control")
 									option() - Select -
 									option(value="nodejs") Node.js
 									option(value="joomla") Joomla
@@ -134,30 +158,10 @@ block content
 						span.help-block Email
 					div.form-group
 						label Password
-						<input type="password" name="password" class="form-control" id="password />
+						<input type="password" name="password" class="form-control" id="password" />
 						span.help-block Password
 					button(type="submit", class="btn btn-primary", id="submit") Update
-	script(type="text/template", class="viewProject")
-		div.row
-			div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-				h3 <%= name %>
-					div.btn-group.pull-right
-						a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
-							span.caret
-						ul(role="menu").dropdown-menu
-							li
-								<a href="#projects/deploy/<%= id %>">Deploy</a>
-							li
-								<a href="#projects/history/<%= id %>">Deploy history</a>
-							li
-								<a href="#projects/edit/<%= id %>">Edit</a>
-							li
-								<a href="#projects/delete/<%= id %>">Delete</a>
-				hr
-				div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
-					div.row
-						p <%= type %>
-						br
+	
 	script(type="text/template", class="deleteProject")
 		div 
 			p 
