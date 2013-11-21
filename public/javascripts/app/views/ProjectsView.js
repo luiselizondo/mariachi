@@ -385,12 +385,12 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 
 			if(!_.isNull(data.stderr)) {
 				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
-				$(".stderr").html(stderr);
+				$(".stderr").append(stderr);
 			}
 
 			if(!_.isNull(data.stdout)) {
 				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
-				$(".stdout").html(stdout);
+				$(".stdout").append(stdout);
 			}
 		});
 
@@ -408,7 +408,7 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 			
 			if(!_.isNull(data.stderr) && !_.isUndefined(data.stderr)) {
 				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
-				$(".stderr").html(stderr);
+				$(".stderr").append(stderr);
 			}
 
 			if(!_.isNull(data.stdout) && !_.isUndefined(data.stdout)) {
