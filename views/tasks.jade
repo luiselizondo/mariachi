@@ -50,7 +50,6 @@ block content
 			thead
 				th Task Id
 				th Type
-				th Recepie / Template
 				th Server
 				th User
 				th Status
@@ -62,25 +61,23 @@ block content
 					td
 						<%= item.type %>
 					td 
-						<%= item.recepieName ? item.recepieName : item.templateName %>
-					td 
 						<a href="/servers#server/<%= item.server %>"><%= item.serverName %></a>
 					td <%= item.userName %>
 					td.status <%= item.status %>
 					td 
-						<a href="#tasks/<%= item.id %>" class="btn btn-primary">View</a>
-						<a href="#tasks/delete/<%= item.id %>" class="btn btn-danger">Cancel</a>
+						<a href="#tasks/<%= item.id %>" class="btn btn-default">View</a>
 				<% }) %>
 	div#page
-		div.container
-			div.row
+		div#header
+			div.container
+				div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+					div.row
+						h1= title
+						br
 				div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
-					h1= title
-						div.pull-right
-							a(href="#tasks/add").btn.btn-primary Add task
-					hr
-					div#messages
-					div#content
+					div.row
+						div#messages
+						div#content
 block scripts
 	script(type="text/javascript", src="javascripts/app/models/Models.js");
 	script(type="text/javascript", src="javascripts/app/collections/Collections.js");

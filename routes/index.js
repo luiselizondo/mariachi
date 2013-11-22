@@ -2,8 +2,8 @@ var passport = require("passport")
 	, util = require('util')
 	, Connection = require("../lib/database")
 	, db = new Connection()
-  , crypto = require("crypto")
-  , config = require("../config")
+  , Secure = require("../lib/secure")
+  , secure = new Secure()
   , LocalStrategy = require('passport-local').Strategy;
 
 /**
@@ -16,14 +16,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-
-      // Encrypt password and compare
-      var algorithm = "aes256";
-      var key = config.secretKey;
-      var cipher = crypto.createCipher(algorithm, key);
-      var encriptedPassword = cipher.update(password, "utf8", "hex") + cipher.final("hex");
-
-      if (encriptedPassword !== user.password) {
+      if (!secure.isEqual(password, user.password)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
