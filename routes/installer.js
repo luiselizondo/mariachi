@@ -15,6 +15,11 @@ function postInstall(req, res) {
 			username: body.mysqluser,
 			password: body.mysqlpassword
 		},
+		mongodb: {
+			database: body.mongodatabase,
+			hostname: body.mongohostname,
+			port: body.mongoport || "27017"
+		},
 		secretKey: body.secretKey,
 		ssh: {
 			publicKey: body.sshPublicKey,

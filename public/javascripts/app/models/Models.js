@@ -94,6 +94,17 @@ Mariachi.Models.Task = Backbone.Model.extend({
 	urlRoot: "/api/tasks"
 });
 
+/**
+ * @todo add created
+ */
+Mariachi.Models.Log = Backbone.Model.extend({
+	defaults: {
+		time: "WAITING",
+	},
+	urlRoot: "/api/logs",
+	id: "_id"
+});
+
 Mariachi.Models.User = Backbone.Model.extend({
 	defaults: {
 		name: "",

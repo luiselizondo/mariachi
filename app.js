@@ -88,6 +88,7 @@ require("./routes/api/recepies")(app);
 require("./routes/api/tasks")(app);
 require("./routes/api/projects")(app);
 require("./routes/api/templates")(app);
+require("./routes/api/logs")(app);
 
 require("./lib/socket")(io);
 

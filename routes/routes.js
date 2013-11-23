@@ -25,6 +25,10 @@ function templates(req, res) {
 	res.render("templates", {title: "Templates"});
 }
 
+function logs(req, res) {
+	res.render("logs", {title: "Logs"});
+}
+
 module.exports = function(app) {
 	app.get("/servers", user.isUser, servers);
 	app.get("/users", user.isUser, users);
@@ -32,4 +36,5 @@ module.exports = function(app) {
 	app.get("/tasks", user.isUser, tasks);
 	app.get("/projects", user.isUser, projects);
 	app.get("/templates", user.isUser, templates);	
+	app.get("/logs", user.isUser, logs);
 }
