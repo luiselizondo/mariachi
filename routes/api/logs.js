@@ -7,10 +7,20 @@ var Connection = require("../../lib/database")
 function getLogs(req, res) {
 	var logs = new Logs();
 	setInterval(function() {
-		logs.getLogs();
+		logs.getLogs(function(err, results) {
+			// do nothing here, we send the response throught events
+		})
 	}, 5000);
 
-	res.send(200);
+	logs.getLogs(function(err, results) {
+		if(err) {
+			res.send(500, {error: err});
+		}
+
+		if(results) {
+			res.send(200, {result: results});
+		}
+	})
 }
 
 function getLog(req, res) {

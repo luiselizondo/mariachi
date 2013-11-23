@@ -19,6 +19,12 @@ Mariachi.Views.ListLogs = Backbone.View.extend({
 				
 			},
 			error: function(results) {
+				new Mariachi.Views.MessageView({
+					message: "There was an error", 
+					type:"danger"
+				});
+
+				self.loading.hide();
 			}
 		});
 	},
