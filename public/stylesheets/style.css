@@ -65,3 +65,6 @@ div#header {
 	height: 80px;	
 }
 
+table.logs {
+	font-size: 90%;
+}

@@ -45,6 +45,11 @@ Mariachi.Collections.Projects = Backbone.Collection.extend({
 	url: "/api/projects"
 });
 
+Mariachi.Collections.Logs = Backbone.Collection.extend({
+  model: Mariachi.Models.Log,
+  url: "/api/logs"
+});
+
 Mariachi.Collections.Tasks = Backbone.Collection.extend({
 	model: Mariachi.Models.Task,
 	url: "/api/tasks"
