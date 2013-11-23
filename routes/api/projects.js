@@ -1,3 +1,9 @@
+/** 
+ * @file handles the api routes for projects
+ * @todo check deploy route,
+ * @todo standarize responses 
+ */
+
 var Connection = require("../../lib/database")
 	, SSH = require("../../lib/ssh")
 	, events = require('../../lib/events').events
@@ -6,7 +12,11 @@ var Connection = require("../../lib/database")
 	, db = new Connection()
 	, EventEmitter = require("events").EventEmitter
 	, e = new EventEmitter()
-	, user = new User();
+	, Validator = require("../../lib/validate")
+	, validate = new Validator()
+	, user = new User()
+	, util = require("util")
+	, _ = require("underscore");
 
 
 /**
@@ -16,7 +26,11 @@ function getProjects(req, res) {
 	db.getProjects(function(err, results) {
 		if(err) {
 			console.log(err);
-			res.send(401, err);
+			res.send(400, err);
+		}
+
+		if(!err && !results) {
+			res.send(204);
 		}
 
 		if(results) {
@@ -25,21 +39,66 @@ function getProjects(req, res) {
 	});
 }
 
+/** 
+ * Used to validate getProject(), deleteProject() and deployProject()
+ * checks that the id is an Integer and that is not empty 
+ */
+function validateID(req, res, next) {
+	req.sanitize("id").escape();
+	req.assert("id", "The ID must be an integer").notEmpty().isInt();
+
+	var errors = req.validationErrors();
+  if (errors) {
+    res.send(400, {errors: util.inspect(errors)});
+    return;
+  }
+	
+	next();
+}
+
 /**
  * Get one Project
  */
 function getProject(req, res) {
 	var id = req.params.id;
-	db.getProject(id, function(err, result) {
+
+	db.getProject(id, function(err, results) {
 		if(err) {
-			console.log(err);
-			res.send(500, err);
+			res.send(400, err);
 		}
 
-		if(result) {
-			res.send(200, result);
+		if(!err && !results) {
+			res.send(204);
+		}
+
+		if(results) {
+			res.send(200, results);
 		}
 	});
+}
+
+/** 
+ * Validate postProject()
+ * 
+ */
+function validatePostProject(req, res, next) {
+	req.sanitize("name").escape();
+	req.sanitize("fqdn").escape();
+	req.sanitize("type").escape();
+
+	req.assert("name", "The name is required").notEmpty().notNull();
+	req.assert("fqdn", "The Full Qualified Domain Name is required and cannot contain spaces")
+		.notEmpty().notNull().notContains(" ").notContains("-");
+	req.assert("type", "The type cannot be empty and must be one of the available options")
+		.notEmpty().notNull().isIn(["drupal", "nodejs", "joomla", "wordpress", "html", "database"]);
+
+	var errors = req.validationErrors();
+  if (errors) {
+    res.send(400, {errors: util.inspect(errors)});
+    return;
+  }
+	
+	next();
 }
 
 /**
@@ -63,14 +122,37 @@ function postProject(req, res) {
 	
 	db.saveProject(insert, function(err, result) {
 		if(err) {
-			console.log(err);
-			res.send(500, err);
+			res.send(400, err);
 		}
 
 		if(result) {
 			res.send(201, result);
 		}
 	})
+}
+
+/** 
+ * Validate putProject()
+ * 
+ */
+function validatePutProject(req, res, next) {
+	req.sanitize("name").escape();
+	req.sanitize("fqdn").escape();
+	req.sanitize("type").escape();
+
+	req.assert("name", "The name is required").notNull();
+	req.assert("fqdn", "The Full Qualified Domain Name is required and cannot contain spaces")
+		.notNull().notContains(" ").notContains("-");
+	req.assert("type", "The type cannot be empty and must be one of the available options")
+		.notNull().isIn(["drupal", "nodejs", "joomla", "wordpress", "html", "database"]);
+
+	var errors = req.validationErrors();
+  if (errors) {
+    res.send(400, {errors: util.inspect(errors)});
+    return;
+  }
+	
+	next();
 }
 
 /**
@@ -83,11 +165,11 @@ function putProject(req, res) {
 	db.updateProject(id, data, function(err, result) {
 		if(err) {
 			console.log(err);
-			res.send(500, err);
+			res.send(400, err);
 		}
 
 		if(result) {
-			res.send(201, result);
+			res.send(200, result);
 		}
 	})
 }
@@ -101,28 +183,31 @@ function deleteProject(req, res) {
 	db.deleteProject(id, function(err, result) {
 		if(err) {
 			console.log(err);
-			res.send(500, err);
+			res.send(400, err);
 		}
 
 		if(result) {
-			res.send(200, result);
+			res.send(204, result);
 		}
 	});
 }
 
+/** 
+ * Deploys a project 
+ */
 function deployProject(req, res) {
 	var id = req.params.id;
 	var project = new Project(id);
 	project.deploy();
 	
-	res.send(200, {message: "Deployment started"});
+	res.send(204, {message: "Deployment started"});
 }
 
 module.exports = function(app) {
 	app.get("/api/projects", user.auth, getProjects);
-	app.get("/api/projects/:id", user.auth, getProject);
-	app.post("/api/projects", user.auth, postProject);
-	app.put("/api/projects/:id", user.auth, putProject);
-	app.post("/api/projects/:id/deploy", user.auth, deployProject);
-	app.delete("/api/projects/:id", user.auth, deleteProject);
+	app.get("/api/projects/:id", user.auth, validateID, getProject);
+	app.post("/api/projects", user.auth, validatePostProject, postProject);
+	app.put("/api/projects/:id", user.auth, validatePutProject, putProject);
+	app.post("/api/projects/:id/deploy", user.auth, validateID, deployProject);
+	app.delete("/api/projects/:id", user.auth, validateID, deleteProject);
 }

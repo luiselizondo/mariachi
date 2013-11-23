@@ -9,6 +9,7 @@ var http = require('http');
 var path = require('path');
 var flash = require('connect-flash');
 var passport = require("passport");
+var expressValidator = require('express-validator');
 var app = express();
 var server = http.createServer(app);
 
@@ -62,6 +63,23 @@ app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.bodyParser());
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
 app.use(flash());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
