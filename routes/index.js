@@ -2,6 +2,8 @@ var passport = require("passport")
 	, util = require('util')
 	, Connection = require("../lib/database")
 	, db = new Connection()
+  , Secure = require("../lib/secure")
+  , secure = new Secure()
   , LocalStrategy = require('passport-local').Strategy;
 
 /**
@@ -14,7 +16,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (password !== user.password) {
+      if (!secure.isEqual(password, user.password)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
@@ -54,7 +56,7 @@ function isUser(req, res, next) {
     next();
   }
   else {
-    res.redirect("/servers");
+    res.redirect("/tasks");
   }
 }
 
@@ -62,7 +64,7 @@ module.exports = function(app) {
   app.get('/', isUser, login);
   app.get("/login", login);
   app.post("/login", passport.authenticate('local', { 
-    successRedirect: "/servers", 
+    successRedirect: "/tasks", 
     failureRedirect: "/login",
     failureFlash: true 
   }));

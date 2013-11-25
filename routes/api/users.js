@@ -2,6 +2,10 @@ var Connection = require("../../lib/database");
 var db = new Connection();
 var User = require("../../lib/user");
 var user = new User();
+var Secure = require("../../lib/secure");
+var secure = new Secure();
+var dateFormat = require("dateformat");
+var _ = require("underscore");
 
 /**
  * Get all Users
@@ -44,9 +48,15 @@ function getUser(req, res) {
 function postUser(req, res) {
 	var data = req.body;
 	
-	data.created = new Date();
+	var now = new Date();
+	var user = {
+		name: data.name,
+		email: data.email,
+		password: secure.encrypt(data.password),
+		created: dateFormat(now, "yyyy-mm-dd hh:mm:ss")
+	}
 
-	db.saveUser(data, function(err, result) {
+	db.saveUser(user, function(err, result) {
 		if(err) {
 			console.log(err);
 			res.send(500, err);
@@ -65,6 +75,10 @@ function putUser(req, res) {
 	var id = req.params.id;
 	var data = req.body;
 	
+	if(!_.isNull(data.password) && !_.isUndefined(data.password)) {
+		data.password = secure.encrypt(data.password);
+	}
+
 	db.updateUser(id, data, function(err, result) {
 		if(err) {
 			console.log(err);

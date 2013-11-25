@@ -1,0 +1,3 @@
+#!/bin/bash
+clear ; mocha -c --timeout 15000 --reporter spec $1
+

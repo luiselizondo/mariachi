@@ -5,7 +5,6 @@ function Config() {
 		var file = require("./installer/settings.json");
 
 		if(_.isObject(file) && !_.isEmpty(file)) {
-			console.log("File found");
 			return file;
 		} 
 		else {

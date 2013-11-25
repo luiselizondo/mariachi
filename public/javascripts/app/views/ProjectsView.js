@@ -1,19 +1,19 @@
 /**
- * List sites
+ * List projects
  */
-Mariachi.Views.ListSites = Backbone.View.extend({
+Mariachi.Views.ListProjects = Backbone.View.extend({
 	el: "#content",
 	events: {
-		"click .btn": "getSite"
+		"click .btn": "getProject"
 	},
 	initialize: function() {
 		this.render();
 	},
 	loading: new Mariachi.Views.Loading(),
-	template: _.template($(".listSites").html()),
+	template: _.template($(".listProjects").html()),
 	render: function() {
 		var self = this;
-		var items = new Mariachi.Collections.Sites();
+		var items = new Mariachi.Collections.Projects();
 		items.fetch({
 			error: function(collection, response) {
 				console.log(response);
@@ -27,24 +27,24 @@ Mariachi.Views.ListSites = Backbone.View.extend({
 			}
 		});
 	},
-	getSite: function(e) {
+	getProject: function(e) {
 		
 	}
 });
 
 /**
- * View a site
+ * View a project
  */
-Mariachi.Views.ViewSite = Backbone.View.extend({
+Mariachi.Views.ViewProject = Backbone.View.extend({
 	el: "#content",
-	template: _.template($(".viewSite").html()),
+	template: _.template($(".viewProject").html()),
 	loading: new Mariachi.Views.Loading(),
 	initialize: function(data) {
 		this.render(data.id);
 	},
 	render: function(id) {
 		var self = this;
-		var model = new Mariachi.Models.Site({id: id});
+		var model = new Mariachi.Models.Project({id: id});
 		model.fetch({
 			success: function(model, response) {
 				self.$el.html(self.template(model.toJSON()));
@@ -59,9 +59,9 @@ Mariachi.Views.ViewSite = Backbone.View.extend({
 });
 
 /**
- * Add site
+ * Add project
  */
-Mariachi.Views.AddSite = Backbone.View.extend({
+Mariachi.Views.AddProject = Backbone.View.extend({
 	el: "#content",
 	events: {
 		"click #submit": "submit",
@@ -74,7 +74,7 @@ Mariachi.Views.AddSite = Backbone.View.extend({
 	},
 	render: function() {
 		var self = this;
-		var template = _.template($(".addSite").html());
+		var template = _.template($(".addProject").html());
 		this.$el.html(template);
 
 		var servers = new Mariachi.Collections.Servers();
@@ -111,10 +111,11 @@ Mariachi.Views.AddSite = Backbone.View.extend({
 		e.preventDefault();
 		self.loading.show();
 
-		$("#submitAddSite").addClass("disabled");
+		$("#submitAddProject").addClass("disabled");
 
 
 		var insert = {
+			type: $("select#type").val(),
 			name: $("input#name").val(),
 			fqdn: $("input#fqdn").val(),
 			webserver: $("select#webServer").val(),
@@ -137,18 +138,18 @@ Mariachi.Views.AddSite = Backbone.View.extend({
 
 		console.log(insert);
 		
-		var model = new Mariachi.Models.Site(insert);
+		var model = new Mariachi.Models.Project(insert);
 
 		model.save(insert, {
 			success: function(model, response) {
-				var collection = new Mariachi.Collections.Sites();
+				var collection = new Mariachi.Collections.Projects();
 				collection.add(model);
 
 				self.loading.hide();
-				Backbone.history.navigate("/sites", {trigger: true, replace: true});
+				Backbone.history.navigate("/projects", {trigger: true, replace: true});
 				
 				new Mariachi.Views.MessageView({
-					message: "Site created.", 
+					message: "Project created.", 
 					type:"success"
 				});
 
@@ -167,23 +168,23 @@ Mariachi.Views.AddSite = Backbone.View.extend({
 });
 
 /**
- * Edit site
+ * Edit project
  */
-Mariachi.Views.EditSite = Backbone.View.extend({
+Mariachi.Views.EditProject = Backbone.View.extend({
 	el: "#content",
 	events: {
-		"click #submitAddSite": "submitAddSite"
+		"click #submitAddProject": "submitAddProject"
 	},
 	loading: new Mariachi.Views.Loading(),
 	initialize: function(data) {
-		this.model = new Mariachi.Models.Site({id: data.id});
+		this.model = new Mariachi.Models.Project({id: data.id});
 		this.render(data.id);
 	},
 	render: function(id) {
 		var self = this;
 		this.model.fetch({
 			success: function(model, response) {
-				var template = _.template($(".editSiteTemplate").html());
+				var template = _.template($(".editProjectTemplate").html());
 				self.$el.html(template(model.toJSON()));
 				self.loading.hide();
 			},
@@ -192,12 +193,12 @@ Mariachi.Views.EditSite = Backbone.View.extend({
 			}
 		});
 	},
-	submitAddSite: function(e) {
+	submitAddProject: function(e) {
 		var self = this;
 		e.preventDefault();
 		self.loading.show();
 
-		$("#submitAddSite").addClass("disabled");
+		$("#submitAddProject").addClass("disabled");
 
 		var data = {
 			name: $('input#name').val(),
@@ -214,13 +215,13 @@ Mariachi.Views.EditSite = Backbone.View.extend({
 		// data.tags;
 		// 
 		
-		// var model = new Mariachi.Models.Site(data);
+		// var model = new Mariachi.Models.Project(data);
 
 		this.model.save(data, {
 			success: function(model, response) {
 				Backbone.history.navigate("/", {trigger: true, replace: true});
 				new Mariachi.Views.MessageView({
-					message: "Site updated.", 
+					message: "Project updated.", 
 					type:"success"
 				});
 				self.loading.hide();
@@ -235,29 +236,29 @@ Mariachi.Views.EditSite = Backbone.View.extend({
 			}
 		});
 		
-		// var collection = new Mariachi.Collections.Sites();
+		// var collection = new Mariachi.Collections.Projects();
 		// collection.add(model);
 	}
 });
 
 /**
- * Delete site
+ * Delete project
  */
-Mariachi.Views.DeleteSite = Backbone.View.extend({
+Mariachi.Views.DeleteProject = Backbone.View.extend({
 	el: "#content",
 	events: {
-		"click #confirmDeleteSubmit": "deleteSite"
+		"click #confirmDeleteSubmit": "deleteProject"
 	},
 	loading: new Mariachi.Views.Loading(),
 	initialize: function(data) {
-		this.model = new Mariachi.Models.Site({id: data.id});
+		this.model = new Mariachi.Models.Project({id: data.id});
 		this.render(data.id);
 	},
 	render: function(id) {
 		var self = this;
 		this.model.fetch({
 			success: function(model, response) {
-				var template = _.template($(".removeSite").html());
+				var template = _.template($(".removeProject").html());
 				self.$el.html(template(model.toJSON()));
 				self.loading.hide();
 			},
@@ -266,7 +267,7 @@ Mariachi.Views.DeleteSite = Backbone.View.extend({
 			}
 		});
 	},
-	deleteSite: function(e) {
+	deleteProject: function(e) {
 		e.preventDefault();
 		var self = this;
 		self.loading.shows();
@@ -274,7 +275,7 @@ Mariachi.Views.DeleteSite = Backbone.View.extend({
 			success: function(model, response) {
 				Backbone.history.navigate("/", {trigger: true, replace: true});
 				new Mariachi.Views.MessageView({
-					message: "Site deleted.", 
+					message: "Project deleted.", 
 					type:"success"
 				});
 				self.loading.hide();
@@ -288,5 +289,134 @@ Mariachi.Views.DeleteSite = Backbone.View.extend({
 			}
 		});
 
+	}
+});
+
+/**
+ * Deploy template
+ */
+Mariachi.Views.DeployProject = Backbone.View.extend({
+	el: "#content",
+	loading: new Mariachi.Views.Loading(),
+	events: {
+		"click #execute": "execute"
+	},
+	projectId: null,
+	template: _.template($(".deployProject").html()),
+	initialize: function(data) {
+		this.render(data.id);
+		this.projectId = data.id;
+	},
+	render: function(id) {
+		var self = this;
+		var model = new Mariachi.Models.Project({id: id});
+		model.fetch({
+			success: function(model, response) {
+				self.$el.html(self.template(model.toJSON()));
+				self.loading.hide();
+			},
+			error: function(model, response) {
+				console.log(response);
+				self.loading.hide();
+			}
+		});
+	},
+	execute: function(e) {
+		// On execution, a task will be created
+		e.preventDefault();
+		var self = this;
+
+		var model = new Mariachi.Models.Project({id: self.projectId});
+		model.deploy(self.projectId, function(err, result) {
+			if(err) {
+				new Mariachi.Views.MessageView({
+					message: "Error: " + result.message, 
+					type:"danger"
+				});
+			}
+			if(result) {
+				new Mariachi.Views.MessageView({
+					message: result.message, 
+					type:"success"
+				});
+			}
+		});
+		
+		self.loading.hide();
+		self.listen();
+	},
+	listen: function() {
+		var self = this;
+		
+		$("form").fadeOut();
+
+		// Clean the well and show the div
+		$(".results").removeClass("hidden");
+		$(".results").fadeIn();
+		$(".stdout").html(" ");
+		$(".stderr").html(" ");
+
+		var statusCell = $("p.status");
+		statusCell.text("EXECUTING");
+
+		Mariachi.io.on("projects:start", function(data) {
+			// Remove the form
+			$("span#deployStatus").removeClass().addClass("label label-info").text("EXECUTING");
+			console.log("Started");
+			console.log(data.started);
+			$("span#started").text("Started: " + data.started);
+
+			if(!_.isNull(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").html(stderr);
+
+				$("span#deployStatus").removeClass().addClass("label label-danger").text("ERROR");
+			}
+
+			if(!_.isNull(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").html(stdout);
+			}
+		});
+
+		Mariachi.io.on("projects:stream", function(data) {
+			console.log(data);
+			statusCell.text(data.status);
+
+			if(!_.isNull(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").append(stderr);
+			}
+
+			if(!_.isNull(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").append(stdout);
+			}
+		});
+
+		Mariachi.io.on("projects:finished", function(data) {
+			console.log("Got tasks:finished");
+			console.log(data);
+			$("span#ended").text("Ended: " + data.ended);
+			if(data.status === "SUCCESS") {
+				$("span#deployStatus").removeClass().addClass("label label-success").text(data.status);
+			}	
+
+			if(data.status === "ERROR") {
+				$("span#deployStatus").removeClass().addClass("label label-danger").text(data.status);
+			}
+			
+			if(!_.isNull(data.stderr) && !_.isUndefined(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").append(stderr);
+			}
+
+			if(!_.isNull(data.stdout) && !_.isUndefined(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").html(stdout);
+			}
+			
+			self.loading.hide();
+		});
 	}
 });

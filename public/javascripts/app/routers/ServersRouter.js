@@ -4,25 +4,24 @@ Mariachi.Routers.ServersRouter = Backbone.Router.extend({
 	},
 	routes: {
 		"": "home",
-		"server/add": "addServer",
-		"server/:id": "getServer",
-		"server/edit/:id": "editServer",
-		"server/delete/:id": "deleteServer"
+		"servers/add": "addServer",
+		"servers/:id": "getServer",
+		"servers/edit/:id": "editServer",
+		"servers/delete/:id": "deleteServer"
 	},
 	home: function() {
-		new Mariachi.Views.ServersHomeView();
-		console.log("Home");
+		new Mariachi.Views.ListServers();
 	},
 	getServer: function(id) {
-		new Mariachi.Views.ServersView({id: id});
+		new Mariachi.Views.ViewServer({id: id});
 	},
 	addServer: function() {
-		new Mariachi.Views.ServersAddView();
+		new Mariachi.Views.AddServer();
 	},
 	editServer: function(id) {
-		new Mariachi.Views.ServersEditView({id: id});
+		new Mariachi.Views.EditServer({id: id});
 	},
 	deleteServer: function(id) {
-		new Mariachi.Views.ServersDeleteView({id: id});
+		new Mariachi.Views.DeleteServer({id: id});
 	}
 });

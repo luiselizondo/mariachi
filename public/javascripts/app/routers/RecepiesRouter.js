@@ -7,7 +7,8 @@ Mariachi.Routers.RecepiesRouter = Backbone.Router.extend({
 		"recepies/add": "addRecepie",
 		"recepies/:id": "getRecepie",
 		"recepies/edit/:id": "editRecepie",
-		"recepies/delete/:id": "deleteRecepie"
+		"recepies/delete/:id": "deleteRecepie",
+		"recepies/execute/:id": "deployRecepie"
 	},
 	home: function() {
 		new Mariachi.Views.ListRecepies();
@@ -23,5 +24,8 @@ Mariachi.Routers.RecepiesRouter = Backbone.Router.extend({
 	},
 	deleteRecepie: function(id) {
 		new Mariachi.Views.DeleteRecepie({id: id});
+	},
+	deployRecepie: function(id) {
+		new Mariachi.Views.ExecuteRecepie({id: id});
 	}
 });

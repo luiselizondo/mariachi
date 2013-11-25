@@ -7,7 +7,8 @@ Mariachi.Routers.TemplatesRouter = Backbone.Router.extend({
 		"templates/add": "addTemplate",
 		"templates/:id": "getTemplate",
 		"templates/edit/:id": "editTemplate",
-		"templates/delete/:id": "deleteTemplate"
+		"templates/delete/:id": "deleteTemplate",
+		"templates/deploy/:id": "deployTemplate"
 	},
 	home: function() {
 		new Mariachi.Views.ListTemplates();
@@ -23,5 +24,8 @@ Mariachi.Routers.TemplatesRouter = Backbone.Router.extend({
 	},
 	deleteTemplate: function(id) {
 		new Mariachi.Views.DeleteTemplate({id: id});
+	},
+	deployTemplate: function(id) {
+		new Mariachi.Views.DeployTemplate({id: id});
 	}
 });

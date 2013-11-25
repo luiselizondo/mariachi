@@ -5,9 +5,7 @@ Mariachi.Routers.TasksRouter = Backbone.Router.extend({
 	routes: {
 		"": "home",
 		"tasks/add": "addTask",
-		"tasks/:id": "getTask",
-		"tasks/edit/:id": "editTask",
-		"tasks/delete/:id": "deleteTask"
+		"tasks/:id": "getTask"
 	},
 	home: function() {
 		new Mariachi.Views.ListTasks();
@@ -17,11 +15,5 @@ Mariachi.Routers.TasksRouter = Backbone.Router.extend({
 	},
 	addTask: function() {
 		new Mariachi.Views.AddTask();
-	},
-	editTask: function(id) {
-		new Mariachi.Views.EditTask({id: id});
-	},
-	deleteTask: function(id) {
-		new Mariachi.Views.DeleteTask({id: id});
 	}
 });

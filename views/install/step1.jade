@@ -33,6 +33,23 @@ block content
 							input(type="text", name="mysqlhostname", id="mysqlhostname", class="form-control", value="localhost")
 							div.help-block Enter the FQDN or IP address of the database
 
+					h3 MongoDB Settings
+					div.well
+						div.form-group
+							label(for="mongodatabase") Database name
+							input(type="text", name="mongodatabase", id="mongodatabase", class="form-control")
+							div.help-block Enter the database name, it must exist before you submit this form.
+
+						div.form-group
+							label(for="mongoport") Port
+							input(type="text", name="mongoport", id="mongoport", class="form-control", value="27017")
+							div.help-block If you need to change the port to the database, you can do it here
+
+						div.form-group
+							label(for="mongohostname") Hostname
+							input(type="text", name="mongohostname", id="mongohostname", class="form-control", value="localhost")
+							div.help-block Enter the FQDN or IP address of the database
+
 					h3 SSH Settings
 					div.well
 						div.form-group

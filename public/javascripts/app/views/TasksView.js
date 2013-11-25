@@ -8,48 +8,22 @@ Mariachi.Views.ListTasks = Backbone.View.extend({
 		var self = this;
 		this.render();
 	},
-	events: {
-		"click #execute": "executeTask"
-	},
-	collection: new Mariachi.Collections.Tasks(),
 	template: _.template($(".listTasks").html()),
 	render: function() {
 		var self = this;
-		var items = this.collection;
+		var items = new Mariachi.Collections.Tasks();
 		items.fetch({
+			success: function(collection, response) {
+				// Table
+				self.$el.html(self.template({items: response}));
+				self.loading.hide();
+			},
 			error: function(collection, response) {
 				console.log("error");
 				console.log(response.responseText);
 				self.loading.hide();
 			},
-			success: function(collection, response) {
-				// Table
-				self.$el.html(self.template({items: response}));
-				self.loading.hide();
-			}
 		});
-	},
-	executeTask: function(e) {
-		e.preventDefault();
-		var taskId = $(e.currentTarget).attr("data-task");
-		
-		var model = new Mariachi.Models.Task({id: taskId});
-		model.set({status: "EXECUTING"});
-		model.save({
-			success: function(model, response) {
-				console.log("Hello");
-				console.log(model);
-				console.log(response);
-			},
-			error: function(model, response) {
-				console.log(response);
-			}
-		});
-
-		var task = this.collection.get({id: taskId});
-		// console.log(task.toJSON());
-		var statusCell = $(e.currentTarget).parent("tr");
-		console.log(statusCell);
 	}
 });
 
@@ -63,7 +37,6 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 	},
 	loading: new Mariachi.Views.Loading(),
 	template: _.template($(".viewTask").html()),
-	collection: new Mariachi.Collections.Tasks(),
 	initialize: function(data) {
 		this.render(data.id);
 	},
@@ -84,18 +57,21 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 	executeTask: function(e) {
 		var self = this;
 		self.loading.show();
+
+		// clean the divs
+		
 		
 		e.preventDefault();
 		var taskId = $(e.currentTarget).attr("data-task");
 
-		// Clean the well
-		$(".well").empty();
+		
 		
 		var model = new Mariachi.Models.Task({id: taskId});
-		model.set({status: "EXECUTING"});
+		// change the status and the task will be executed
+		model.set({status: "EXECUTE"});
 		model.save({
 			success: function(model, response) {
-				
+				console.log("Model saved");
 			},
 			error: function(model, response) {
 				console.log(response);
@@ -105,15 +81,37 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 		var statusCell = $("p.status");
 		statusCell.text("EXECUTING");
 
-		Mariachi.io.on("tasks:stream", function(data) {
-			if(data.stderr) {
+		Mariachi.io.on("tasks:start", function(data) {
+			$(".stdout").html(" ");
+			$(".stderr").html(" ");
+
+			// Clean the well
+			$(".well").html(" ");
+
+			statusCell.text(data.status);
+
+			if(!_.isNull(data.stderr)) {
 				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
-				$(".stderr").append(stderr);
+				$(".stderr").html(stderr);
 			}
 
-			if(data.stdout) {
+			if(!_.isNull(data.stdout)) {
 				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
-				$(".stdout").append(stdout);
+				$(".stdout").html(stdout);
+			}
+		});
+
+		Mariachi.io.on("tasks:stream", function(data) {
+			statusCell.text(data.status);
+
+			if(!_.isNull(data.stderr)) {
+				var stderr = data.stderr.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stderr").html(stderr);
+			}
+
+			if(!_.isNull(data.stdout)) {
+				var stdout = data.stdout.replace(new RegExp('\r?\n', 'g'), '<br />');
+				$(".stdout").html(stdout);
 			}
 		});
 
@@ -122,19 +120,6 @@ Mariachi.Views.ViewTask = Backbone.View.extend({
 			self.loading.hide();
 		});
 
-	}
-});
-
-Mariachi.Views.Patterns = Backbone.View.extend({
-	el: "div.patterns",
-	template: _.template($(".pattern").html()),
-	initialize: function(pattern) {
-		this.render(pattern);
-	},
-	render: function(pattern) {
-		if(pattern) {
-			this.$el.append(this.template({pattern: pattern}));	
-		}
 	}
 });
 
@@ -233,7 +218,6 @@ Mariachi.Views.AddTask = Backbone.View.extend({
 						console.log(response);
 					}
 				});
-
 			});
 		});
 

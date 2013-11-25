@@ -17,12 +17,16 @@ function tasks(req, res) {
 	res.render("tasks", {title: "Tasks"});
 }
 
-function sites(req, res) {
-	res.render("sites", {title: "Sites"});
+function projects(req, res) {
+	res.render("projects", {title: "Projects"});
 }
 
 function templates(req, res) {
 	res.render("templates", {title: "Templates"});
+}
+
+function logs(req, res) {
+	res.render("logs", {title: "Logs"});
 }
 
 module.exports = function(app) {
@@ -30,6 +34,7 @@ module.exports = function(app) {
 	app.get("/users", user.isUser, users);
 	app.get("/recepies", user.isUser, recepies);
 	app.get("/tasks", user.isUser, tasks);
-	app.get("/sites", user.isUser, sites);
+	app.get("/projects", user.isUser, projects);
 	app.get("/templates", user.isUser, templates);	
+	app.get("/logs", user.isUser, logs);
 }

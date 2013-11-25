@@ -1,0 +1,55 @@
+1. Go to /installer and copy default.settings.json to settings.json
+2. Make sure you apply the correct permissions so the installer can write to settings.json
+3. Create a database
+	mysqladmin -uuser -p create mydatabase
+4. Create a database and import it:
+	mysql -uuser -p mydatabase < installer/database.sql
+5. Run "npm install" to install dependencies
+6. If you haven't done so, create a new SSH Key for your server and remember the location of both your private and your public keys
+7. Run "node app.js" from the root directory
+8. Go to http://yourip:port/ to run the installer
+9. Once the installer is finished,do Control+C to kill the application and you're set, run the app again with
+node app.js or forever
+
+10. If you want to run recepies on your destination server and you'll need sudo, you need to go to the remote server and do:
+
+"sudo visudo"
+
+and then add your user like this:
+
+myuser ALL=(ALL) NOPASSWD: ALL
+
+
+
+
+INSTALL FLUENTD
+Install Fluentd by following one of the methods in http://docs.fluentd.org/articles/quickstart
+
+Install the Fluentd Plugin
+/usr/lib/fluent/ruby/bin/fluent-gem install fluent-plugin-out-http
+
+Configure the services you want to monitor and the endpoint (Provided by Mariachi)
+Edit: /etc/td-agent/td-agent.conf
+
+<source>
+  type tail
+  format syslog
+  path /var/log/syslog
+  tag syslog
+</source>
+
+<match *>
+  type http
+  endpoint_url    http://localhost:3000/api/logs
+  http_method     post
+  serializer      json
+  rate_limit_msec 100
+  authentication  basic
+  username        mykey
+  password        mysecretkey
+</match>
+
+
+Start MongoDB
+Start Mariachi
+Restart td-agent using sudo service td-agent start

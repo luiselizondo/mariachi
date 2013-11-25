@@ -35,7 +35,7 @@ if(!config) {
 
 var CaminteStore = require("connect-caminte")(express);
 var io = require('socket.io');
-var io = io.listen(server);
+var io = io.listen(server, {log: false});
 var User = require("./lib/user");
 var user = new User();
 
@@ -86,8 +86,9 @@ require("./routes/api/servers")(app);
 require("./routes/api/users")(app);
 require("./routes/api/recepies")(app);
 require("./routes/api/tasks")(app);
-require("./routes/api/sites")(app);
+require("./routes/api/projects")(app);
 require("./routes/api/templates")(app);
+require("./routes/api/logs")(app);
 
 require("./lib/socket")(io);
 

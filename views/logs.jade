@@ -1,0 +1,48 @@
+extends layout
+
+block content
+	script(type="text/template", class="logRow")
+		tr
+			td <%= host %>
+			td <%= ident %>
+			td <%= message %>
+			td <%= time %>
+			td
+				<a href="#" data-id="<%= _id %>" class="view btn btn-sm btn-default">View</a>
+	div#page
+			div#header
+				div.container
+					div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+						div.row
+							h1= title
+							br
+					div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+						div.row
+							div#messages
+							div#content
+								table.table.table-hover.table-condensed.table-striped.logs
+									thead
+										tr
+											th Source
+											th Type
+											th Message
+											th Created
+											th
+									tbody.tbody
+										
+
+block scripts
+	script(type="text/javascript", src="javascripts/app/models/Models.js");
+	script(type="text/javascript", src="javascripts/app/collections/Collections.js");
+	script(type="text/javascript", src="javascripts/app/views/LogsView.js");
+	script(type="text/javascript", src="javascripts/app/routers/LogsRouter.js")
+	script(type="text/javascript")
+		function main() {
+			new Mariachi.Routers.LogsRouter();
+			Backbone.history.start();	
+		}
+
+		// Initialize main
+		$(function(){
+			main();
+		});

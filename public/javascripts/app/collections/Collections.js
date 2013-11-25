@@ -5,12 +5,49 @@ Mariachi.Collections.Recepies = Backbone.Collection.extend({
 
 Mariachi.Collections.Servers = Backbone.Collection.extend({
 	model: Mariachi.Models.Server,
-	url: "/api/servers"
+	url: "/api/servers",
+	getWithStatus: function(status, callback) {
+		$.ajax({
+      type: "GET",
+      url: this.url,
+      data: {status: status},
+      dataType: "json",
+      success: function(data){
+      	console.log(data);
+        callback(false, data);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("FETCH FAILED: " + errorThrown);
+        callback(errorThrown, false);
+      }
+	  });
+	},
+	refreshStatus: function(callback) {
+		var url = this.url + "/actions";
+
+		$.ajax({
+      type: "GET",
+      url: this.url + "/actions",
+      data: {action: "refreshStatus"},
+      dataType: "json",
+      success: function(data){
+        callback(data);
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("FETCH FAILED: " + errorThrown);
+      }
+	  });
+	}
 });
 
-Mariachi.Collections.Sites = Backbone.Collection.extend({
-	model: Mariachi.Models.Site,
-	url: "/api/sites"
+Mariachi.Collections.Projects = Backbone.Collection.extend({
+	model: Mariachi.Models.Project,
+	url: "/api/projects"
+});
+
+Mariachi.Collections.Logs = Backbone.Collection.extend({
+  model: Mariachi.Models.Log,
+  url: "/api/logs"
 });
 
 Mariachi.Collections.Tasks = Backbone.Collection.extend({
