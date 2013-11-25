@@ -1,5 +1,7 @@
 var fs = require("fs");
 var mysql = require("mysql");
+var Secure = require("../lib/secure")
+	, secure = new Secure();
 
 function Connection (options) {
 	var self = this;
@@ -71,7 +73,7 @@ function postStepTwo(req, res) {
 	
 	var data = {
 		email: body.email,
-		password: body.password,
+		password: secure.encrypt(body.password),
 		name: body.name
 	}
 
