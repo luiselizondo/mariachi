@@ -16,9 +16,15 @@ Mariachi.Views.ListLogs = Backbone.View.extend({
 		this.render();
 		self.collection.fetch({
 			success: function(results) {
-				
+				self.loading.hide();
+				var data = results.toJSON();
+				_.each(data, function(result) {
+					self.$el.prepend(self.template(result));
+				})
 			},
 			error: function(results) {
+				self.loading.hide();
+				// self.$el.prepend(self.template(data));
 			}
 		});
 	},
