@@ -1,7 +1,6 @@
 var fs = require("fs");
 var mysql = require("mysql");
-var Secure = require("../lib/secure")
-	, secure = new Secure();
+var Secure = require("../lib/secure");
 
 function Connection (options) {
 	var self = this;
@@ -70,6 +69,7 @@ function getStepTwo(req, res) {
 function postStepTwo(req, res) {
 	var body = req.body;
 	var config = require("../config");
+	var secure = new Secure();
 	
 	var data = {
 		email: body.email,
