@@ -37,7 +37,7 @@ CREATE TABLE `Sessions` (
   KEY `expireAfterSeconds` (`expireAfterSeconds`),
   KEY `logedIn` (`logedIn`),
   KEY `user` (`user`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=313 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,11 +54,14 @@ CREATE TABLE `projects` (
   `data` longtext,
   `status` int(11) DEFAULT '0',
   `type` varchar(45) DEFAULT NULL,
+  `stderr` longtext,
+  `stdout` longtext,
+  `description` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   KEY `name` (`name`),
   KEY `fqdn` (`fqdn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +80,7 @@ CREATE TABLE `recepies` (
   `interpreter` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,11 +99,12 @@ CREATE TABLE `servers` (
   `tags` varchar(255) DEFAULT NULL,
   `os` varchar(45) NOT NULL,
   `address` varchar(255) NOT NULL,
+  `status` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `os` (`os`),
   KEY `address` (`address`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +127,7 @@ CREATE TABLE `tasks` (
   `ended` datetime DEFAULT NULL,
   `parameters` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,4 +177,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-15 16:45:47
+-- Dump completed on 2013-11-25 16:49:16
