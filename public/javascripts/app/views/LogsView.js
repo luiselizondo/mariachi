@@ -24,7 +24,6 @@ Mariachi.Views.ListLogs = Backbone.View.extend({
 			},
 			error: function(results) {
 				self.loading.hide();
-				// self.$el.prepend(self.template(data));
 			}
 		});
 	},
@@ -50,7 +49,6 @@ Mariachi.Views.ListLogs = Backbone.View.extend({
 		var model = new Mariachi.Models.Log({id: id});
 		model.fetch({
 			success: function(response) {
-				console.log(response.toJSON());
 				var content = response.toJSON().result;
 				var modal = new Backbone.BootstrapModal({
 					content: content.message,

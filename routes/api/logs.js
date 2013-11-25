@@ -15,7 +15,6 @@ function getLogs(req, res) {
 			res.send(204, {result: "No results"});	
 		}
 		if(results.length) {
-			console.log(results);
 			res.send(200, results);
 		}
 	});
