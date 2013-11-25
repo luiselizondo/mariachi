@@ -1,11 +1,20 @@
 var fs = require("fs");
 var mysql = require("mysql");
-var Secure = require("../lib/secure");
+var crypto = require("crypto");
 
 function Connection (options) {
 	var self = this;
 	self.options = {};
 	self.installerFile = "";
+	self.secretKey = "";
+
+	self.setSecretKey = function(secretKey) {
+		self.secretKey = secretKey;
+	}
+
+	self.getSecretKey = function() {
+		return self.secretKey;
+	}
 
 	self.saveUser = function(data, callback) {
 		var connection = mysql.createConnection(self.options);
@@ -50,6 +59,7 @@ function postInstall(req, res) {
 		}
 	}
 
+	connection.setSecretKey(body.secretKey);
 	connection.set(data.mysql);
 
 	var insert = JSON.stringify(data);
@@ -69,11 +79,15 @@ function getStepTwo(req, res) {
 function postStepTwo(req, res) {
 	var body = req.body;
 	var config = require("../config");
-	var secure = new Secure();
-	
+
+	var algorithm = "aes256";
+	var secretKey = connection.getSecretKey();
+	var cipher = crypto.createCipher(algorithm, secretKey);
+	var password = cipher.update(body.password, "utf8", "hex") + cipher.final("hex");
+
 	var data = {
 		email: body.email,
-		password: secure.encrypt(body.password),
+		password: password,
 		name: body.name
 	}
 
