@@ -18,3 +18,38 @@ node app.js or forever
 and then add your user like this:
 
 myuser ALL=(ALL) NOPASSWD: ALL
+
+
+
+
+INSTALL FLUENTD
+Install Fluentd by following one of the methods in http://docs.fluentd.org/articles/quickstart
+
+Install the Fluentd Plugin
+/usr/lib/fluent/ruby/bin/fluent-gem install fluent-plugin-out-http
+
+Configure the services you want to monitor and the endpoint (Provided by Mariachi)
+Edit: /etc/td-agent/td-agent.conf
+
+<source>
+  type tail
+  format syslog
+  path /var/log/syslog
+  tag syslog
+</source>
+
+<match *>
+  type http
+  endpoint_url    http://localhost:3000/api/logs
+  http_method     post
+  serializer      json
+  rate_limit_msec 100
+  authentication  basic
+  username        mykey
+  password        mysecretkey
+</match>
+
+
+Start MongoDB
+Start Mariachi
+Restart td-agent using sudo service td-agent start

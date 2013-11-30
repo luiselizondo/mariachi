@@ -99,7 +99,10 @@ Mariachi.Models.Task = Backbone.Model.extend({
  */
 Mariachi.Models.Log = Backbone.Model.extend({
 	defaults: {
-		time: "WAITING",
+		host: "",
+		ident: "",
+		message: "",
+		time: ""
 	},
 	urlRoot: "/api/logs",
 	id: "_id"
