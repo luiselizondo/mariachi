@@ -2,7 +2,6 @@
  * List servers
  */
 Mariachi.Views.ListServers = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click .refreshStatus": "refreshStatus"
 	},
@@ -21,6 +20,7 @@ Mariachi.Views.ListServers = Backbone.View.extend({
 			success: function(collection, response) {
 				// Table
 				self.$el.html(self.template({items: response}));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			}
 		});
@@ -41,7 +41,6 @@ Mariachi.Views.ListServers = Backbone.View.extend({
  * View a server
  */
 Mariachi.Views.ViewServer = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click button.sshHelp": "sshHelp",
 		"click a.createSSHKey": "createSSHKey",
@@ -60,6 +59,7 @@ Mariachi.Views.ViewServer = Backbone.View.extend({
 		model.fetch({
 			success: function(model, response) {
 				self.$el.html(self.template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -159,7 +159,6 @@ Mariachi.Views.SSHHelp = Backbone.View.extend({
  * Add server
  */
 Mariachi.Views.AddServer = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click #submit": "submit"
 	},
@@ -168,9 +167,12 @@ Mariachi.Views.AddServer = Backbone.View.extend({
 		this.render();
 	},
 	render: function() {
+		var self = this;
 		var template = _.template($(".addServer").html());
-		this.$el.html(template);
-		this.loading.hide();
+
+		self.$el.html(template);
+		$("#content").empty().append(self.$el);
+		self.loading.hide();
 	},
 	submit: function(e) {
 		var self = this;
@@ -224,7 +226,6 @@ Mariachi.Views.AddServer = Backbone.View.extend({
  * Edit server
  */
 Mariachi.Views.EditServer = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click #submit": "submit"
 	},
@@ -239,6 +240,7 @@ Mariachi.Views.EditServer = Backbone.View.extend({
 			success: function(model, response) {
 				var template = _.template($(".editServer").html());
 				self.$el.html(template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -298,7 +300,6 @@ Mariachi.Views.EditServer = Backbone.View.extend({
  * Delete server
  */
 Mariachi.Views.DeleteServer = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click #submit": "submit"
 	},
@@ -313,6 +314,7 @@ Mariachi.Views.DeleteServer = Backbone.View.extend({
 			success: function(model, response) {
 				var template = _.template($(".deleteServer").html());
 				self.$el.html(template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {

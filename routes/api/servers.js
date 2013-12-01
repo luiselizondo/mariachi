@@ -4,6 +4,9 @@ var Connection = require("../../lib/database")
 	, db = new Connection()
 	, actions = new Actions()
 	, user = new User()
+	, Secure = require("../../lib/secure")
+	, secure = new Secure()
+	, dateFormat = require("dateformat")
 	, config = require("../../config");
 
 /**
@@ -62,6 +65,13 @@ function postServer(req, res) {
 	
 	// always set the status of a server as 0
 	data.status = 0;
+
+	// Generate public and private keys
+	var now = new Date();
+	var date = dateFormat(now, "yyyymmddhMMss");
+	data.publicKey = secure.encrypt(data.name);
+	data.privateKey = secure.encrypt(date);
+
 	db.saveServer(data, function(err, result) {
 		if(err) {
 			console.log(err);
