@@ -1,0 +1,18 @@
+script(type="text/template", class="editProject")
+	div.row
+		div(class="col-lg-6")
+			h3 Add server
+			form(role="form").well
+				div.form-group
+					label Name
+					<input type="text" name="name" class="form-control" id="name" value="<%= name %>" />
+					span.help-block Name
+				div.form-group
+					label Email
+					<input type="text" name="email" class="form-control" id="email" value="<%= email %>" />
+					span.help-block Email
+				div.form-group
+					label Password
+					<input type="password" name="password" class="form-control" id="password" />
+					span.help-block Password
+				button(type="submit", class="btn btn-primary", id="submit") Update

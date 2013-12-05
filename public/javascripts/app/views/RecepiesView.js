@@ -15,7 +15,6 @@ Mariachi.Views.Parameters = Backbone.View.extend({
  * List servers
  */
 Mariachi.Views.ListRecepies = Backbone.View.extend({
-	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	initialize: function() {
 		this.render();
@@ -32,6 +31,7 @@ Mariachi.Views.ListRecepies = Backbone.View.extend({
 			success: function(collection, response) {
 				// Table
 				self.$el.html(self.template({items: response}));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			}
 		});
@@ -42,7 +42,6 @@ Mariachi.Views.ListRecepies = Backbone.View.extend({
  * View a server
  */
 Mariachi.Views.ViewRecepie = Backbone.View.extend({
-	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	template: _.template($(".viewRecepie").html()),
 	initialize: function(data) {
@@ -54,6 +53,7 @@ Mariachi.Views.ViewRecepie = Backbone.View.extend({
 		model.fetch({
 			success: function(model, response) {
 				self.$el.html(self.template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -68,7 +68,6 @@ Mariachi.Views.ViewRecepie = Backbone.View.extend({
  * Add server
  */
 Mariachi.Views.AddRecepie = Backbone.View.extend({
-	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	events: {
 		"click #submit": "submit"
@@ -77,8 +76,10 @@ Mariachi.Views.AddRecepie = Backbone.View.extend({
 		this.render();
 	},
 	render: function() {
+		var self = this;
 		var template = _.template($(".addRecepie").html());
 		this.$el.html(template);
+		$("#content").empty().append(self.$el);
 	},
 	submit: function(e) {
 		var self = this;
@@ -127,7 +128,6 @@ Mariachi.Views.AddRecepie = Backbone.View.extend({
  * Edit recepie
  */
 Mariachi.Views.EditRecepie = Backbone.View.extend({
-	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	events: {
 		"click #submit": "submit"
@@ -142,6 +142,7 @@ Mariachi.Views.EditRecepie = Backbone.View.extend({
 			success: function(model, response) {
 				var template = _.template($(".editRecepie").html());
 				self.$el.html(template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -191,7 +192,6 @@ Mariachi.Views.EditRecepie = Backbone.View.extend({
  * Delete recepie
  */
 Mariachi.Views.DeleteRecepie = Backbone.View.extend({
-	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	events: {
 		"click #submit": "submit"
@@ -206,6 +206,7 @@ Mariachi.Views.DeleteRecepie = Backbone.View.extend({
 			success: function(model, response) {
 				var template = _.template($(".deleteRecepie").html());
 				self.$el.html(template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -245,7 +246,6 @@ Mariachi.Views.DeleteRecepie = Backbone.View.extend({
  * Execute recepie
  */
 Mariachi.Views.ExecuteRecepie = Backbone.View.extend({
-	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	events: {
 		"click #execute": "execute"
@@ -262,6 +262,7 @@ Mariachi.Views.ExecuteRecepie = Backbone.View.extend({
 		model.fetch({
 			success: function(model, response) {
 				self.$el.html(self.template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 
 				self.populateServers();

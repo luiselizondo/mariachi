@@ -1,0 +1,118 @@
+script(type="text/template", class="addProject")
+	div.row
+		div(class="col-lg-12")
+			h3 Add Project
+			form(role="form").form-horizontal.well.row
+				div.col-lg-6
+					div.form-group
+						label.control-label.col-sm-3 Type
+						div.col-sm-9
+							select(name="type", id="type", class="form-control")
+								option() - Select -
+								option(value="nodejs") Node.js
+								option(value="joomla") Joomla
+								option(value="wordpress") Wordpress
+								option(value="drupal6") Drupal 6
+								option(value="drupal7") Drupal 7
+							span.help-block Type of the project
+					div.form-group
+						label.control-label.col-sm-3 Name
+						div.col-sm-9
+							input(type="text", name="name", class="form-control", id="name")
+							span.help-block Name of the Project
+					div.form-group
+						label.control-label.col-sm-3 FQDN
+						div.col-sm-9
+							input(type="text", name="fqdn", class="form-control", id="fqdn", placeholder="www.example.com")
+							span.help-block Full Qualified Domain Name
+					div.form-group
+						label.control-label.col-sm-3 Web server
+						div.col-sm-9
+							select(name="webServer", id="webServer", class="form-control")
+							span.help-block Web server (Only Apache is supported)
+					div.form-group
+						label.control-label.col-sm-3 Code archive
+						div.col-sm-9
+							input(type="text", name="codeArchive", class="form-control", id="codeArchive" placeholder="git@github.com/example:project.git")
+							span.help-block Git address where the code lives, I must be able to clone the repository
+					div.form-group
+						label.control-label.col-sm-3 Code Branch
+						div.col-sm-9
+							input(type="text", name="codeBranch", class="form-control", id="codeBranch" placeholder="master")
+							span.help-block Git branch to clone for the code
+					div.form-group
+						label.control-label.col-sm-3 Destination directory
+						div.col-sm-9
+							input(type="text", name="destinationDirectory", class="form-control", id="destinationDirectory", placeholder="/srv/www/www.example.com/public_html")
+							span.help-block Destination directory, do not add a trailing slash
+					div.form-group
+						label.control-label.col-sm-3 Logs directory
+						div.col-sm-9
+							input(type="text", name="logsDirectory", class="form-control", id="logsDirectory", placeholder="/srv/www/www.example.com/logs")
+							span.help-block Logs directory, do not add a trailing slash
+				div.col-lg-6
+					div.form-group
+						label.control-label.col-sm-3 Database server
+						div.col-sm-9
+							select(name="databaseServer", id="databaseServer", class="form-control")
+							span.help-block Web server
+					div.form-group
+						label.control-label.col-sm-3 Database archive
+						div.col-sm-9
+							input(type="text", name="databaseArchive", class="form-control", id="databaseArchive", placeholder="git@github.com/example:database.git")
+							span.help-block Database must be gziped, example: database.sql.gz
+					div.form-group
+						label.control-label.col-sm-3 Database filename
+						div.col-sm-9
+							input(type="text", name="databaseFilename", class="form-control", id="databaseFilename", placeholder="mydatabase.sql.gz")
+							span.help-block Filename of the database file to clone
+					div.form-group
+						label.control-label.col-sm-3 Database type
+						div.col-sm-9
+							select(name="databaseType", id="databaseType", class="form-control")
+								option(value="mysql") MySQL
+								option(value="mongodb") MongoDB
+							span.help-block Database type
+					div.form-group
+						label.control-label.col-sm-3 Database name
+						div.col-sm-9
+							input(type="text", name="databaseName", class="form-control", id="databaseName", placeholder="mydatabase")
+							span.help-block Name of the database
+					div.form-group
+						label.control-label.col-sm-3 Database user
+						div.col-sm-9
+							input(type="text", name="databaseUser", class="form-control", id="databaseUser", placeholder="root")
+							span.help-block Database user
+					div.form-group
+						label.control-label.col-sm-3 Database password
+						div.col-sm-9
+							input(type="password", name="databasePassword", class="form-control", id="databasePassword", placeholder="cookies")
+							span.help-block Database password
+					div.form-group
+						label.control-label.col-sm-3 Database port
+						div.col-sm-9
+							input(type="text", name="databasePort", class="form-control", id="databasePort", placeholder="3306")
+							span.help-block Database port
+					div.form-group
+						label.control-label.col-sm-3 Create database and user?
+						div.col-sm-9
+							div.radio
+								label
+									input(type="radio", class="createDatabase", name="createDatabase", value="no" checked)
+									p No
+							div.radio
+								label
+									input(type="radio", class="createDatabase", name="createDatabase", value="yes") 
+									p Yes
+					div.form-database.hidden
+						div.form-group
+							label.control-label.col-sm-3 Database User with Privileges
+							div.col-sm-9
+								input(type="text", name="databaseUserRoot", id="databaseUserRoot", class="form-control")
+						div.form-group
+							label.control-label.col-sm-3 Password
+							div.col-sm-9
+								input(type="password", name="databasePasswordRoot", id="databasePasswordRoot", class="form-control")
+
+				div.row
+					button(type="submit", class="btn btn-primary", id="submit") Save

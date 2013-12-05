@@ -1,0 +1,15 @@
+script(type="text/template", class="listProjects")
+	div.row
+		div(class="col-lg-9 col-md-9 col-sm-12 col-xs-12")	
+			table.table.table-hover.table-striped
+				thead
+					th.col-lg-11.col-md-11.col-sm-11.col-xs-11 Name
+					th 
+				tbody
+					<% _.each(items, function(item) { %>
+					tr.item
+						td
+							<a href="#projects/<%= item.id %>"><%= item.name %></a>
+						td 
+							<a href="#projects/<%= item.id %>" class="btn btn-default">View</a>
+					<% }) %>	

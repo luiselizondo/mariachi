@@ -1,0 +1,47 @@
+//- deploy recepie
+script(type="text/template", class="deployProject")
+	div.row
+		div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+			h3 Deploy project: <%= name %>
+				div.btn-group.pull-right
+					a(href="#", class="btn btn-success dropdown-toggle", data-toggle="dropdown") Actions
+						span.caret
+					ul(role="menu").dropdown-menu
+						li
+							<a href="#projects/<%= id %>">View</a>
+						li
+							<a href="#projects/history/<%= id %>">Deploy history</a>
+						li
+							<a href="#projects/edit/<%= id %>">Edit</a>
+						li
+							<a href="#projects/delete/<%= id %>">Delete</a>
+			hr
+			div.row
+				div(class="col-lg-9 col-md-9 col-sm-9 col-xs-12")
+					h4 Project Type:
+					p <%= type %>
+					form(role="form")
+						br
+						button(type="button", id="execute").btn.btn-success Deploy
+						br
+			div(class="col-lg-3 col-md-3 col-sm-3")
+	div.row.results.hidden
+		div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+			h4 Results
+			div.row
+				div(class="col-lg-10 col-md-10 col-sm-10 col-xs-10")
+					span#started
+					span
+					span#ended
+				div(class="col-lg-2 col-md-2 col-sm-2 col-xs-2")
+					div.pull-right
+						span#deployStatus
+			hr
+			div
+				span(class="label label-info") stdout
+			br
+			div.well.stdout
+			div
+				span(class="label label-danger") stderr
+			br
+			div.well.stderr  

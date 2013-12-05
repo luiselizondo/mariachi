@@ -2,7 +2,6 @@
  * List projects
  */
 Mariachi.Views.ListProjects = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click .btn": "getProject"
 	},
@@ -23,6 +22,7 @@ Mariachi.Views.ListProjects = Backbone.View.extend({
 				console.log(response);
 				// Table
 				self.$el.html(self.template({items: response}));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			}
 		});
@@ -36,7 +36,6 @@ Mariachi.Views.ListProjects = Backbone.View.extend({
  * View a project
  */
 Mariachi.Views.ViewProject = Backbone.View.extend({
-	el: "#content",
 	template: _.template($(".viewProject").html()),
 	loading: new Mariachi.Views.Loading(),
 	initialize: function(data) {
@@ -47,7 +46,10 @@ Mariachi.Views.ViewProject = Backbone.View.extend({
 		var model = new Mariachi.Models.Project({id: id});
 		model.fetch({
 			success: function(model, response) {
-				self.$el.html(self.template(model.toJSON()));
+				var data = model.toJSON();
+				console.log(data);
+				self.$el.html(self.template(data));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -62,7 +64,6 @@ Mariachi.Views.ViewProject = Backbone.View.extend({
  * Add project
  */
 Mariachi.Views.AddProject = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click #submit": "submit",
 		"click .createDatabase": "showDatabaseRootAccess",
@@ -75,6 +76,7 @@ Mariachi.Views.AddProject = Backbone.View.extend({
 	render: function() {
 		var self = this;
 		var template = _.template($(".addProject").html());
+		$("#content").empty().append(self.$el);
 		this.$el.html(template);
 
 		var servers = new Mariachi.Collections.Servers();
@@ -171,7 +173,6 @@ Mariachi.Views.AddProject = Backbone.View.extend({
  * Edit project
  */
 Mariachi.Views.EditProject = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click #submitAddProject": "submitAddProject"
 	},
@@ -186,6 +187,7 @@ Mariachi.Views.EditProject = Backbone.View.extend({
 			success: function(model, response) {
 				var template = _.template($(".editProjectTemplate").html());
 				self.$el.html(template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -245,7 +247,6 @@ Mariachi.Views.EditProject = Backbone.View.extend({
  * Delete project
  */
 Mariachi.Views.DeleteProject = Backbone.View.extend({
-	el: "#content",
 	events: {
 		"click #confirmDeleteSubmit": "deleteProject"
 	},
@@ -260,6 +261,7 @@ Mariachi.Views.DeleteProject = Backbone.View.extend({
 			success: function(model, response) {
 				var template = _.template($(".removeProject").html());
 				self.$el.html(template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
@@ -296,7 +298,6 @@ Mariachi.Views.DeleteProject = Backbone.View.extend({
  * Deploy template
  */
 Mariachi.Views.DeployProject = Backbone.View.extend({
-	el: "#content",
 	loading: new Mariachi.Views.Loading(),
 	events: {
 		"click #execute": "execute"
@@ -313,6 +314,7 @@ Mariachi.Views.DeployProject = Backbone.View.extend({
 		model.fetch({
 			success: function(model, response) {
 				self.$el.html(self.template(model.toJSON()));
+				$("#content").empty().append(self.$el);
 				self.loading.hide();
 			},
 			error: function(model, response) {
